@@ -7,7 +7,11 @@ import {
   TouchableOpacity,
   Alert,
   Share,
+  Animated,
+  Platform,
 } from 'react-native';
+import Icon from 'react-native-vector-icons/Ionicons';
+import MaterialDesignIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import Clipboard from '@react-native-clipboard/clipboard';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
@@ -17,6 +21,7 @@ const QuoteCard = ({ quote, author, onNewQuote, loading, isOffline }) => {
   const [copySuccess, setCopySuccess] = useState(false);
   const [isFavorite, setIsFavorite] = useState(false);
   const [favoriteLoading, setFavoriteLoading] = useState(false);
+  const [animatedValue] = useState(new Animated.Value(0));
 
   // Create a unique key for each quote
   const getQuoteKey = (quote, author) => {
@@ -67,6 +72,20 @@ const QuoteCard = ({ quote, author, onNewQuote, loading, isOffline }) => {
         favoritesArray.push(newFavorite);
         await AsyncStorage.setItem('favoriteQuotes', JSON.stringify(favoritesArray));
         setIsFavorite(true);
+        
+        // Animate heart
+        Animated.sequence([
+          Animated.timing(animatedValue, {
+            toValue: 1,
+            duration: 200,
+            useNativeDriver: true,
+          }),
+          Animated.timing(animatedValue, {
+            toValue: 0,
+            duration: 200,
+            useNativeDriver: true,
+          }),
+        ]).start();
         
         Alert.alert(
           'Added to Favorites',
@@ -138,59 +157,78 @@ const QuoteCard = ({ quote, author, onNewQuote, loading, isOffline }) => {
     }
   };
 
+  const heartScale = animatedValue.interpolate({
+    inputRange: [0, 1],
+    outputRange: [1, 1.3],
+  });
+
   return (
     <View style={styles.container}>
       <View style={styles.card}>
         <View style={styles.cardHeader}>
-          <Text style={styles.quoteIcon}>"</Text>
+          <View style={styles.quoteIconContainer}>
+            <MaterialDesignIcons name="format-quote-open" size={32} color="#667eea" style={styles.quoteIcon} />
+          </View>
           <TouchableOpacity
             style={[styles.favoriteButton, favoriteLoading && styles.favoriteButtonDisabled]}
             onPress={toggleFavorite}
             disabled={favoriteLoading}
             activeOpacity={0.8}
           >
-            <Text style={styles.favoriteIcon}>
-              {favoriteLoading ? '⏳' : isFavorite ? '❤️' : '🤍'}
-            </Text>
+            <Animated.View style={[{ transform: [{ scale: heartScale }] }]}>
+              <Icon 
+                name={isFavorite ? "heart" : "heart-outline"} 
+                size={22} 
+                color={isFavorite ? "#e74c3c" : "#bdc3c7"} 
+              />
+            </Animated.View>
           </TouchableOpacity>
         </View>
         <Text style={styles.quoteText}>{quote}</Text>
         <View style={styles.authorContainer}>
           <Text style={styles.authorText}>— {author}</Text>
           {isOffline && (
-            <Text style={styles.offlineText}>📱 Offline Mode</Text>
+            <View style={styles.offlineContainer}>
+              <Icon name="wifi-outline" size={14} color="#f39c12" />
+              <Text style={styles.offlineText}>Offline Mode</Text>
+            </View>
           )}
         </View>
       </View>
       
       <View style={styles.buttonContainer}>
         <TouchableOpacity
-          style={[styles.copyButton, copySuccess && styles.copyButtonSuccess]}
+          style={[styles.actionButton, styles.copyButton, copySuccess && styles.copyButtonSuccess]}
           onPress={copyToClipboard}
           activeOpacity={0.8}
         >
-          <Text style={styles.copyButtonText}>
-            {copySuccess ? '✓ Copied!' : '📋 Copy'}
+          <Icon 
+            name={copySuccess ? "checkmark" : "copy-outline"} 
+            size={16} 
+            color="#FFFFFF" 
+          />
+          <Text style={styles.actionButtonText}>
+            {copySuccess ? 'Copied!' : 'Copy'}
           </Text>
         </TouchableOpacity>
         
         <TouchableOpacity
-          style={styles.shareButton}
+          style={[styles.actionButton, styles.shareButton]}
           onPress={shareQuote}
           activeOpacity={0.8}
         >
-          <Text style={styles.shareButtonText}>
-            🔗 Share
-          </Text>
+          <Icon name="share-outline" size={16} color="#FFFFFF" />
+          <Text style={styles.actionButtonText}>Share</Text>
         </TouchableOpacity>
         
         <TouchableOpacity
-          style={[styles.button, loading && styles.buttonDisabled]}
+          style={[styles.actionButton, styles.newQuoteButton, loading && styles.buttonDisabled]}
           onPress={onNewQuote}
           disabled={loading}
           activeOpacity={0.8}
         >
-          <Text style={styles.buttonText}>
+          <Icon name="refresh-outline" size={16} color="#FFFFFF" />
+          <Text style={styles.actionButtonText}>
             {loading ? 'Loading...' : 'New Quote'}
           </Text>
         </TouchableOpacity>
@@ -207,148 +245,133 @@ const styles = StyleSheet.create({
   },
   card: {
     backgroundColor: '#FFFFFF',
-    borderRadius: 20,
-    padding: 30,
-    marginBottom: 40,
+    borderRadius: 24,
+    padding: 32,
+    marginBottom: 32,
     width: width - 40,
-    minHeight: 200,
+    minHeight: 220,
     justifyContent: 'center',
-    shadowColor: '#000',
-    shadowOffset: {
-      width: 0,
-      height: 10,
-    },
-    shadowOpacity: 0.15,
-    shadowRadius: 20,
-    elevation: 10,
+    // iOS Shadow
+    ...Platform.select({
+      ios: {
+        shadowColor: '#000',
+        shadowOffset: {
+          width: 0,
+          height: 8,
+        },
+        shadowOpacity: 0.25,
+        shadowRadius: 16,
+      },
+      android: {
+        elevation: 16,
+      },
+    }),
   },
   cardHeader: {
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'flex-start',
-    marginBottom: 10,
+    marginBottom: 16,
+  },
+  quoteIconContainer: {
+    opacity: 0.6,
   },
   quoteIcon: {
-    fontSize: 60,
-    color: '#6366F1',
-    fontWeight: 'bold',
-    opacity: 0.3,
-    flex: 1,
-    textAlign: 'center',
+    opacity: 0.4,
   },
   favoriteButton: {
-    padding: 5,
+    padding: 8,
     borderRadius: 20,
-    position: 'absolute',
-    top: -10,
-    right: -10,
-    zIndex: 1,
   },
   favoriteButtonDisabled: {
     opacity: 0.6,
   },
-  favoriteIcon: {
-    fontSize: 28,
-  },
   quoteText: {
-    fontSize: 18,
-    lineHeight: 28,
-    color: '#1F2937',
+    fontSize: 20,
+    lineHeight: 32,
+    color: '#2c3e50',
     textAlign: 'center',
     fontStyle: 'italic',
-    marginBottom: 20,
+    marginBottom: 24,
+    fontWeight: '400',
+    letterSpacing: 0.3,
   },
   authorContainer: {
     alignItems: 'flex-end',
-    marginTop: 10,
+    marginTop: 8,
   },
   authorText: {
     fontSize: 16,
-    color: '#6B7280',
+    color: '#7f8c8d',
     fontWeight: '600',
+    letterSpacing: 0.5,
+  },
+  offlineContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginTop: 8,
+    backgroundColor: '#fff3cd',
+    paddingHorizontal: 12,
+    paddingVertical: 6,
+    borderRadius: 16,
+  },
+  offlineText: {
+    fontSize: 12,
+    color: '#856404',
+    fontWeight: '500',
+    marginLeft: 6,
   },
   buttonContainer: {
     flexDirection: 'row',
-    gap: 10,
+    gap: 12,
     alignItems: 'center',
     flexWrap: 'wrap',
     justifyContent: 'center',
   },
-  copyButton: {
-    backgroundColor: '#10B981',
+  actionButton: {
+    flexDirection: 'row',
+    alignItems: 'center',
     paddingHorizontal: 20,
     paddingVertical: 16,
     borderRadius: 25,
-    shadowColor: '#10B981',
-    shadowOffset: {
-      width: 0,
-      height: 4,
-    },
-    shadowOpacity: 0.3,
-    shadowRadius: 8,
-    elevation: 8,
-    minWidth: 90,
+    minWidth: 100,
+    justifyContent: 'center',
+    // iOS Shadow
+    ...Platform.select({
+      ios: {
+        shadowColor: '#000',
+        shadowOffset: {
+          width: 0,
+          height: 4,
+        },
+        shadowOpacity: 0.3,
+        shadowRadius: 8,
+      },
+      android: {
+        elevation: 8,
+      },
+    }),
+  },
+  actionButtonText: {
+    color: '#FFFFFF',
+    fontSize: 14,
+    fontWeight: '600',
+    marginLeft: 6,
+  },
+  copyButton: {
+    backgroundColor: '#27ae60',
   },
   copyButtonSuccess: {
-    backgroundColor: '#059669',
-  },
-  copyButtonText: {
-    color: '#FFFFFF',
-    fontSize: 14,
-    fontWeight: '600',
-    textAlign: 'center',
+    backgroundColor: '#2ecc71',
   },
   shareButton: {
-    backgroundColor: '#F59E0B',
-    paddingHorizontal: 20,
-    paddingVertical: 16,
-    borderRadius: 25,
-    shadowColor: '#F59E0B',
-    shadowOffset: {
-      width: 0,
-      height: 4,
-    },
-    shadowOpacity: 0.3,
-    shadowRadius: 8,
-    elevation: 8,
-    minWidth: 90,
+    backgroundColor: '#3498db',
   },
-  shareButtonText: {
-    color: '#FFFFFF',
-    fontSize: 14,
-    fontWeight: '600',
-    textAlign: 'center',
-  },
-  button: {
-    backgroundColor: '#6366F1',
-    paddingHorizontal: 25,
-    paddingVertical: 16,
-    borderRadius: 25,
-    shadowColor: '#6366F1',
-    shadowOffset: {
-      width: 0,
-      height: 4,
-    },
-    shadowOpacity: 0.3,
-    shadowRadius: 8,
-    elevation: 8,
+  newQuoteButton: {
+    backgroundColor: '#9b59b6',
   },
   buttonDisabled: {
-    backgroundColor: '#9CA3AF',
-    shadowOpacity: 0.1,
-  },
-  buttonText: {
-    color: '#FFFFFF',
-    fontSize: 14,
-    fontWeight: '600',
-    textAlign: 'center',
-  },
-  offlineText: {
-    fontSize: 12,
-    color: '#F59E0B',
-    marginTop: 5,
-    textAlign: 'center',
-    fontWeight: '500',
+    backgroundColor: '#95a5a6',
   },
 });
 

@@ -7,7 +7,9 @@ import {
   StatusBar,
   TouchableOpacity,
   Text,
+  Platform,
 } from 'react-native';
+import Icon from 'react-native-vector-icons/Ionicons';
 import QuoteCard from './QuoteCard';
 import FavoritesScreen from './FavoritesScreen';
 
@@ -169,8 +171,8 @@ const QuoteGenerator = () => {
   }, []);
 
   return (
-    <View style={styles.container}>
-      <StatusBar barStyle="light-content" backgroundColor="#4F46E5" />
+    <View style={[styles.container, currentScreen === 'favorites' && styles.favoritesContainer]}>
+      <StatusBar barStyle="light-content" backgroundColor="transparent" translucent />
       
       {currentScreen === 'favorites' ? (
         <FavoritesScreen onBack={() => setCurrentScreen('main')} />
@@ -182,7 +184,8 @@ const QuoteGenerator = () => {
             onPress={() => setCurrentScreen('favorites')}
             activeOpacity={0.8}
           >
-            <Text style={styles.favoritesButtonText}>❤️ My Favorites</Text>
+            <Icon name="heart" size={18} color="#FFFFFF" />
+            <Text style={styles.favoritesButtonText}>Favorites</Text>
           </TouchableOpacity>
 
           {quote && author ? (
@@ -196,6 +199,7 @@ const QuoteGenerator = () => {
           ) : (
             <View style={styles.loadingContainer}>
               <ActivityIndicator size="large" color="#FFFFFF" />
+              <Text style={styles.loadingText}>Loading inspiration...</Text>
             </View>
           )}
         </>
@@ -210,27 +214,56 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
   },
+  favoritesContainer: {
+    justifyContent: 'flex-start',
+    alignItems: 'stretch',
+  },
   favoritesButton: {
     position: 'absolute',
-    top: 60,
+    top: Platform.OS === 'android' ? 60 : 60,
     right: 20,
-    backgroundColor: 'rgba(255, 255, 255, 0.2)',
-    paddingHorizontal: 20,
+    backgroundColor: 'rgba(255, 255, 255, 0.15)',
+    paddingHorizontal: 16,
     paddingVertical: 12,
     borderRadius: 25,
     borderWidth: 1,
-    borderColor: 'rgba(255, 255, 255, 0.3)',
+    borderColor: 'rgba(255, 255, 255, 0.2)',
     zIndex: 1,
+    flexDirection: 'row',
+    alignItems: 'center',
+    // Platform-specific shadows
+    ...Platform.select({
+      ios: {
+        shadowColor: '#000',
+        shadowOffset: {
+          width: 0,
+          height: 4,
+        },
+        shadowOpacity: 0.3,
+        shadowRadius: 8,
+      },
+      android: {
+        elevation: 8,
+      },
+    }),
   },
   favoritesButtonText: {
     color: '#FFFFFF',
     fontSize: 14,
     fontWeight: '600',
+    marginLeft: 8,
   },
   loadingContainer: {
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
+  },
+  loadingText: {
+    color: '#FFFFFF',
+    fontSize: 16,
+    marginTop: 16,
+    opacity: 0.8,
+    fontWeight: '500',
   },
 });
 

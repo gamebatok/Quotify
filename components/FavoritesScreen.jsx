@@ -6,12 +6,14 @@ import {
   FlatList,
   TouchableOpacity,
   Alert,
-  Dimensions,
   SafeAreaView,
+  StatusBar,
+  Platform,
 } from 'react-native';
+import Icon from 'react-native-vector-icons/Ionicons';
+import MaterialDesignIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-
-const { width } = Dimensions.get('window');
+import LinearGradient from 'react-native-linear-gradient';
 
 const FavoritesScreen = ({ onBack }) => {
   const [favorites, setFavorites] = useState([]);
@@ -75,18 +77,25 @@ const FavoritesScreen = ({ onBack }) => {
   const renderQuoteItem = ({ item }) => (
     <View style={styles.quoteItem}>
       <View style={styles.quoteContent}>
+        <View style={styles.quoteHeader}>
+          <MaterialDesignIcons name="format-quote-open" size={20} color="#667eea" style={styles.quoteIconSmall} />
+          <Icon name="heart" size={14} color="#e74c3c" />
+        </View>
         <Text style={styles.quoteText}>"{item.quote}"</Text>
         <Text style={styles.authorText}>— {item.author}</Text>
-        <Text style={styles.dateText}>
-          Saved on {formatDate(item.dateAdded)}
-        </Text>
+        <View style={styles.dateContainer}>
+          <MaterialDesignIcons name="calendar" size={12} color="#bdc3c7" />
+          <Text style={styles.dateText}>
+            Saved on {formatDate(item.dateAdded)}
+          </Text>
+        </View>
       </View>
       <TouchableOpacity
         style={styles.removeButton}
         onPress={() => removeFavorite(item.key)}
         activeOpacity={0.8}
       >
-        <Text style={styles.removeButtonText}>🗑️</Text>
+        <MaterialDesignIcons name="delete" size={18} color="#e74c3c" />
       </TouchableOpacity>
     </View>
   );
@@ -97,63 +106,84 @@ const FavoritesScreen = ({ onBack }) => {
   }, []);
 
   return (
-    <SafeAreaView style={styles.container}>
-      <View style={styles.header}>
-        <TouchableOpacity style={styles.backButton} onPress={onBack}>
-          <Text style={styles.backButtonText}>← Back</Text>
-        </TouchableOpacity>
-        <Text style={styles.title}>My Favorites</Text>
-        <TouchableOpacity style={styles.refreshButton} onPress={loadFavorites}>
-          <Text style={styles.refreshButtonText}>🔄</Text>
-        </TouchableOpacity>
-      </View>
+    <LinearGradient
+      colors={['#667eea', '#764ba2', '#f093fb']}
+      start={{ x: 0, y: 0 }}
+      end={{ x: 1, y: 1 }}
+      style={styles.container}
+    >
+      <StatusBar barStyle="light-content" backgroundColor="transparent" translucent />
+      <SafeAreaView style={styles.safeArea}>
+        <View style={styles.header}>
+          <TouchableOpacity style={styles.backButton} onPress={onBack}>
+            <Icon name="arrow-back" size={20} color="#FFFFFF" />
+            <Text style={styles.backButtonText}>Back</Text>
+          </TouchableOpacity>
+          <Text style={styles.title}>My Favorites</Text>
+          <TouchableOpacity style={styles.refreshButton} onPress={loadFavorites}>
+            <Icon name="refresh-outline" size={20} color="#FFFFFF" />
+          </TouchableOpacity>
+        </View>
 
-      {loading ? (
-        <View style={styles.centerContainer}>
-          <Text style={styles.loadingText}>Loading favorites...</Text>
+        <View style={styles.content}>
+          {loading ? (
+            <View style={styles.centerContainer}>
+              <Icon name="heart-outline" size={60} color="#FFFFFF" style={styles.loadingIcon} />
+              <Text style={styles.loadingText}>Loading favorites...</Text>
+            </View>
+          ) : favorites.length === 0 ? (
+            <View style={styles.centerContainer}>
+              <Icon name="heart-outline" size={80} color="#FFFFFF" style={styles.emptyIcon} />
+              <Text style={styles.emptyTitle}>No Favorites Yet</Text>
+              <Text style={styles.emptyText}>
+                Start saving quotes by tapping the heart icon on quotes you love!
+              </Text>
+            </View>
+          ) : (
+            <FlatList
+              data={favorites}
+              renderItem={renderQuoteItem}
+              keyExtractor={(item) => item.key}
+              style={styles.list}
+              contentContainerStyle={styles.listContent}
+              showsVerticalScrollIndicator={false}
+            />
+          )}
         </View>
-      ) : favorites.length === 0 ? (
-        <View style={styles.centerContainer}>
-          <Text style={styles.emptyIcon}>💭</Text>
-          <Text style={styles.emptyTitle}>No Favorites Yet</Text>
-          <Text style={styles.emptyText}>
-            Start saving quotes by tapping the heart icon on quotes you love!
-          </Text>
-        </View>
-      ) : (
-        <FlatList
-          data={favorites}
-          renderItem={renderQuoteItem}
-          keyExtractor={(item) => item.key}
-          style={styles.list}
-          contentContainerStyle={styles.listContent}
-          showsVerticalScrollIndicator={false}
-        />
-      )}
-    </SafeAreaView>
+      </SafeAreaView>
+    </LinearGradient>
   );
 };
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#F3F4F6',
+    width: '100%',
+  },
+  safeArea: {
+    flex: 1,
+    paddingTop: Platform.OS === 'android' ? StatusBar.currentHeight : 0,
   },
   header: {
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
     paddingHorizontal: 20,
-    paddingVertical: 15,
-    backgroundColor: '#6366F1',
+    paddingVertical: Platform.OS === 'android' ? 12 : 16,
+    backgroundColor: 'rgba(255, 255, 255, 0.1)',
+    borderBottomWidth: 1,
+    borderBottomColor: 'rgba(255, 255, 255, 0.2)',
   },
   backButton: {
+    flexDirection: 'row',
+    alignItems: 'center',
     padding: 8,
   },
   backButtonText: {
     color: '#FFFFFF',
     fontSize: 16,
     fontWeight: '600',
+    marginLeft: 8,
   },
   title: {
     color: '#FFFFFF',
@@ -163,8 +193,8 @@ const styles = StyleSheet.create({
   refreshButton: {
     padding: 8,
   },
-  refreshButtonText: {
-    fontSize: 18,
+  content: {
+    flex: 1,
   },
   centerContainer: {
     flex: 1,
@@ -172,76 +202,103 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     paddingHorizontal: 40,
   },
+  loadingIcon: {
+    opacity: 0.8,
+    marginBottom: 16,
+  },
   loadingText: {
     fontSize: 16,
-    color: '#6B7280',
+    color: '#FFFFFF',
+    opacity: 0.8,
   },
   emptyIcon: {
-    fontSize: 60,
-    marginBottom: 20,
+    opacity: 0.6,
+    marginBottom: 24,
   },
   emptyTitle: {
     fontSize: 24,
     fontWeight: 'bold',
-    color: '#1F2937',
-    marginBottom: 10,
+    color: '#FFFFFF',
+    marginBottom: 16,
     textAlign: 'center',
   },
   emptyText: {
     fontSize: 16,
-    color: '#6B7280',
+    color: '#FFFFFF',
     textAlign: 'center',
     lineHeight: 24,
+    opacity: 0.8,
   },
   list: {
     flex: 1,
   },
   listContent: {
     padding: 20,
+    paddingBottom: 40,
   },
   quoteItem: {
-    backgroundColor: '#FFFFFF',
-    borderRadius: 15,
+    backgroundColor: 'rgba(255, 255, 255, 0.95)',
+    borderRadius: 20,
     padding: 20,
-    marginBottom: 15,
+    marginBottom: 16,
     flexDirection: 'row',
     alignItems: 'flex-start',
-    shadowColor: '#000',
-    shadowOffset: {
-      width: 0,
-      height: 2,
-    },
-    shadowOpacity: 0.1,
-    shadowRadius: 8,
-    elevation: 4,
+    // Platform-specific shadows
+    ...Platform.select({
+      ios: {
+        shadowColor: '#000',
+        shadowOffset: {
+          width: 0,
+          height: 4,
+        },
+        shadowOpacity: 0.15,
+        shadowRadius: 12,
+      },
+      android: {
+        elevation: 6,
+      },
+    }),
   },
   quoteContent: {
     flex: 1,
-    marginRight: 15,
+    marginRight: 16,
+  },
+  quoteHeader: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    marginBottom: 12,
+  },
+  quoteIconSmall: {
+    opacity: 0.6,
   },
   quoteText: {
     fontSize: 16,
-    lineHeight: 24,
-    color: '#1F2937',
+    lineHeight: 26,
+    color: '#2c3e50',
     fontStyle: 'italic',
-    marginBottom: 10,
+    marginBottom: 12,
+    fontWeight: '400',
   },
   authorText: {
     fontSize: 14,
-    color: '#6B7280',
+    color: '#7f8c8d',
     fontWeight: '600',
-    marginBottom: 8,
+    marginBottom: 10,
+  },
+  dateContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
   },
   dateText: {
     fontSize: 12,
-    color: '#9CA3AF',
+    color: '#95a5a6',
+    marginLeft: 6,
   },
   removeButton: {
-    padding: 8,
+    padding: 12,
     borderRadius: 20,
-  },
-  removeButtonText: {
-    fontSize: 20,
+    backgroundColor: 'rgba(231, 76, 60, 0.1)',
   },
 });
 

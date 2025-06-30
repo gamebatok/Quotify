@@ -1,5 +1,7 @@
 PODS:
   - boost (1.84.0)
+  - BVLinearGradient (2.8.3):
+    - React-Core
   - DoubleConversion (1.1.6)
   - fast_float (8.0.0)
   - FBLazyVector (0.80.0)
@@ -1648,6 +1650,10 @@ PODS:
     - React-RCTFBReactNativeSpec
     - ReactCommon/turbomodule/core
     - SocketRocket
+  - react-native-vector-icons-evil-icons (12.0.1)
+  - react-native-vector-icons-fontawesome6 (12.0.1)
+  - react-native-vector-icons-ionicons (12.0.1)
+  - react-native-vector-icons-material-design-icons (12.0.1)
   - React-NativeModulesApple (0.80.0):
     - boost
     - DoubleConversion
@@ -2180,11 +2186,41 @@ PODS:
     - ReactCommon/turbomodule/core
     - SocketRocket
     - Yoga
+  - RNVectorIcons (10.2.0):
+    - boost
+    - DoubleConversion
+    - fast_float
+    - fmt
+    - glog
+    - hermes-engine
+    - RCT-Folly
+    - RCT-Folly/Fabric
+    - RCTRequired
+    - RCTTypeSafety
+    - React-Core
+    - React-debug
+    - React-Fabric
+    - React-featureflags
+    - React-graphics
+    - React-hermes
+    - React-ImageManager
+    - React-jsi
+    - React-NativeModulesApple
+    - React-RCTFabric
+    - React-renderercss
+    - React-rendererdebug
+    - React-utils
+    - ReactCodegen
+    - ReactCommon/turbomodule/bridging
+    - ReactCommon/turbomodule/core
+    - SocketRocket
+    - Yoga
   - SocketRocket (0.7.1)
   - Yoga (0.0.0)
 
 DEPENDENCIES:
   - boost (from `../node_modules/react-native/third-party-podspecs/boost.podspec`)
+  - BVLinearGradient (from `../node_modules/react-native-linear-gradient`)
   - DoubleConversion (from `../node_modules/react-native/third-party-podspecs/DoubleConversion.podspec`)
   - fast_float (from `../node_modules/react-native/third-party-podspecs/fast_float.podspec`)
   - FBLazyVector (from `../node_modules/react-native/Libraries/FBLazyVector`)
@@ -2225,6 +2261,10 @@ DEPENDENCIES:
   - React-logger (from `../node_modules/react-native/ReactCommon/logger`)
   - React-Mapbuffer (from `../node_modules/react-native/ReactCommon`)
   - React-microtasksnativemodule (from `../node_modules/react-native/ReactCommon/react/nativemodule/microtasks`)
+  - "react-native-vector-icons-evil-icons (from `../node_modules/@react-native-vector-icons/evil-icons`)"
+  - "react-native-vector-icons-fontawesome6 (from `../node_modules/@react-native-vector-icons/fontawesome6`)"
+  - "react-native-vector-icons-ionicons (from `../node_modules/@react-native-vector-icons/ionicons`)"
+  - "react-native-vector-icons-material-design-icons (from `../node_modules/@react-native-vector-icons/material-design-icons`)"
   - React-NativeModulesApple (from `../node_modules/react-native/ReactCommon/react/nativemodule/core/platform/ios`)
   - React-oscompat (from `../node_modules/react-native/ReactCommon/oscompat`)
   - React-perflogger (from `../node_modules/react-native/ReactCommon/reactperflogger`)
@@ -2258,6 +2298,7 @@ DEPENDENCIES:
   - ReactCommon/turbomodule/core (from `../node_modules/react-native/ReactCommon`)
   - "RNCAsyncStorage (from `../node_modules/@react-native-async-storage/async-storage`)"
   - "RNCClipboard (from `../node_modules/@react-native-clipboard/clipboard`)"
+  - RNVectorIcons (from `../node_modules/react-native-vector-icons`)
   - SocketRocket (~> 0.7.1)
   - Yoga (from `../node_modules/react-native/ReactCommon/yoga`)
 
@@ -2268,6 +2309,8 @@ SPEC REPOS:
 EXTERNAL SOURCES:
   boost:
     :podspec: "../node_modules/react-native/third-party-podspecs/boost.podspec"
+  BVLinearGradient:
+    :path: "../node_modules/react-native-linear-gradient"
   DoubleConversion:
     :podspec: "../node_modules/react-native/third-party-podspecs/DoubleConversion.podspec"
   fast_float:
@@ -2347,6 +2390,14 @@ EXTERNAL SOURCES:
     :path: "../node_modules/react-native/ReactCommon"
   React-microtasksnativemodule:
     :path: "../node_modules/react-native/ReactCommon/react/nativemodule/microtasks"
+  react-native-vector-icons-evil-icons:
+    :path: "../node_modules/@react-native-vector-icons/evil-icons"
+  react-native-vector-icons-fontawesome6:
+    :path: "../node_modules/@react-native-vector-icons/fontawesome6"
+  react-native-vector-icons-ionicons:
+    :path: "../node_modules/@react-native-vector-icons/ionicons"
+  react-native-vector-icons-material-design-icons:
+    :path: "../node_modules/@react-native-vector-icons/material-design-icons"
   React-NativeModulesApple:
     :path: "../node_modules/react-native/ReactCommon/react/nativemodule/core/platform/ios"
   React-oscompat:
@@ -2413,11 +2464,14 @@ EXTERNAL SOURCES:
     :path: "../node_modules/@react-native-async-storage/async-storage"
   RNCClipboard:
     :path: "../node_modules/@react-native-clipboard/clipboard"
+  RNVectorIcons:
+    :path: "../node_modules/react-native-vector-icons"
   Yoga:
     :path: "../node_modules/react-native/ReactCommon/yoga"
 
 SPEC CHECKSUMS:
   boost: 7e761d76ca2ce687f7cc98e698152abd03a18f90
+  BVLinearGradient: cb006ba232a1f3e4f341bb62c42d1098c284da70
   DoubleConversion: cb417026b2400c8f53ae97020b2be961b59470cb
   fast_float: b32c788ed9c6a8c584d114d0047beda9664e7cc6
   FBLazyVector: 778b815a6fb3fa1599f581ffb9a5e85fad313c1d
@@ -2457,6 +2511,10 @@ SPEC CHECKSUMS:
   React-logger: dce52a571ba0e0149c3f0fcc6866cbc0c8552c5e
   React-Mapbuffer: f5754c33877eaf36e4c76c613b35615a181c85c5
   React-microtasksnativemodule: 23df6374a3ac422d8c2927839bcaeed61fee3dad
+  react-native-vector-icons-evil-icons: 26a89e2d729c84231afbe726de8aa5b976a7a6be
+  react-native-vector-icons-fontawesome6: 624a5578d701e52b18fb7f35b56556395a4249c0
+  react-native-vector-icons-ionicons: 82538a5f94fd186b3b7abd49192ea96e28876887
+  react-native-vector-icons-material-design-icons: fa35dd305942c95e838767cea9ef1934bf0aafc2
   React-NativeModulesApple: e16d5c133019987285f001fbf1461a861e40426f
   React-oscompat: 7c0a341cc31e350da71ddf2e46de0a845d1d1626
   React-perflogger: c91e01612298b74f70d846ae3666d2b078c547e0
@@ -2490,6 +2548,7 @@ SPEC CHECKSUMS:
   ReactCommon: b028d09a66e60ebd83ca59d8cc9a1216360db147
   RNCAsyncStorage: 1f04c8d56558e533277beda29187f571cf7eecb2
   RNCClipboard: b228d492733d66e0126e18ce66c6d2f90bacc7e5
+  RNVectorIcons: ef9b4b0b786053ebdd63ee2972f48de9633ba166
   SocketRocket: d4aabe649be1e368d1318fdf28a022d714d65748
   Yoga: 0c4b7d2aacc910a1f702694fa86be830386f4ceb
 
