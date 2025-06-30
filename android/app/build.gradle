@@ -57,7 +57,12 @@ react {
 /**
  * Set this to true to Run Proguard on Release builds to minify the Java bytecode.
  */
-def enableProguardInReleaseBuilds = false
+def enableProguardInReleaseBuilds = true
+
+/**
+ * Enable separate APKs per architecture for smaller download sizes
+ */
+def enableSeparateBuildPerCPUArchitecture = true
 
 /**
  * The preferred build flavor of JavaScriptCore (JSC)
@@ -84,7 +89,24 @@ android {
         targetSdkVersion rootProject.ext.targetSdkVersion
         versionCode 1
         versionName "1.0"
+        
+        // Enable vector drawable support for smaller APK
+        vectorDrawables.useSupportLibrary = true
+        
+        // Disable generation of unused resources
+        resConfigs "en"
     }
+    
+    // Enable APK splitting by architecture for smaller downloads
+    splits {
+        abi {
+            reset()
+            enable enableSeparateBuildPerCPUArchitecture
+            universalApk false  // If true, also generate a universal APK
+            include "armeabi-v7a", "x86", "arm64-v8a", "x86_64"
+        }
+    }
+    
     signingConfigs {
         debug {
             storeFile file('debug.keystore')
@@ -102,7 +124,24 @@ android {
             // see https://reactnative.dev/docs/signed-apk-android.
             signingConfig signingConfigs.debug
             minifyEnabled enableProguardInReleaseBuilds
-            proguardFiles getDefaultProguardFile("proguard-android.txt"), "proguard-rules.pro"
+            shrinkResources true  // Remove unused resources
+            proguardFiles getDefaultProguardFile("proguard-android-optimize.txt"), "proguard-rules.pro"
+        }
+    }
+    
+    // Map for the version code that gives each ABI a value.
+    project.ext.abiCodes = ["armeabi-v7a": 1, "x86": 2, "arm64-v8a": 3, "x86_64": 4]
+    
+    // Configure variant outputs for APK splitting
+    applicationVariants.all { variant ->
+        variant.outputs.each { output ->
+            // For each separate APK per architecture, set a unique version code
+            def versionCodes = project.ext.abiCodes
+            def abi = output.getFilter(com.android.build.OutputFile.ABI)
+            if (abi != null) {  // null for the universal APK
+                output.versionCodeOverride =
+                    defaultConfig.versionCode * 1000 + versionCodes.get(abi)
+            }
         }
     }
 }

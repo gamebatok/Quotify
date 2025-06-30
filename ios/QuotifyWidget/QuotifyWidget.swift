@@ -123,14 +123,32 @@ struct Provider: TimelineProvider {
     
     private func fetchQuoteFromAPI() async -> QuoteData? {
         print("QuotifyWidget: Fetching from API")
-        // Try ZenQuotes first
+        // Try Quotable first (better rate limits than ZenQuotes)
+        if let quotableQuote = await fetchFromQuotable() {
+            return quotableQuote
+        }
+        
+        // Try ZenQuotes as backup
         if let zenQuote = await fetchFromZenQuotes() {
             return zenQuote
         }
         
-        // Try Quotable as backup
-        if let quotableQuote = await fetchFromQuotable() {
-            return quotableQuote
+        return nil
+    }
+    
+    private func fetchFromQuotable() async -> QuoteData? {
+        guard let url = URL(string: "https://api.quotable.io/random") else { return nil }
+        
+        do {
+            let (data, _) = try await URLSession.shared.data(from: url)
+            if let json = try JSONSerialization.jsonObject(with: data) as? [String: Any],
+               let content = json["content"] as? String,
+               let author = json["author"] as? String {
+                print("QuotifyWidget: Got quote from Quotable")
+                return QuoteData(content: content, author: author, lastUpdate: nil)
+            }
+        } catch {
+            print("QuotifyWidget: Quotable API error: \(error)")
         }
         
         return nil
@@ -150,24 +168,6 @@ struct Provider: TimelineProvider {
             }
         } catch {
             print("QuotifyWidget: ZenQuotes API error: \(error)")
-        }
-        
-        return nil
-    }
-    
-    private func fetchFromQuotable() async -> QuoteData? {
-        guard let url = URL(string: "http://api.quotable.io/random") else { return nil }
-        
-        do {
-            let (data, _) = try await URLSession.shared.data(from: url)
-            if let json = try JSONSerialization.jsonObject(with: data) as? [String: Any],
-               let content = json["content"] as? String,
-               let author = json["author"] as? String {
-                print("QuotifyWidget: Got quote from Quotable")
-                return QuoteData(content: content, author: author, lastUpdate: nil)
-            }
-        } catch {
-            print("QuotifyWidget: Quotable API error: \(error)")
         }
         
         return nil

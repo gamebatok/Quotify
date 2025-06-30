@@ -131,58 +131,58 @@ class QuoteWidgetProvider : AppWidgetProvider() {
 
     private fun fetchQuoteFromAPI(): Pair<String, String> {
         return try {
-            // Try ZenQuotes first
+            // Try Quotable first (better rate limits than ZenQuotes)
             var quote: Pair<String, String>? = null
             
             try {
-                val zenUrl = URL("https://zenquotes.io/api/random")
-                val zenConnection = zenUrl.openConnection() as HttpURLConnection
-                zenConnection.requestMethod = "GET"
-                zenConnection.connectTimeout = 10000
-                zenConnection.readTimeout = 10000
+                val quotableUrl = URL("https://api.quotable.io/random")
+                val quotableConnection = quotableUrl.openConnection() as HttpURLConnection
+                quotableConnection.requestMethod = "GET"
+                quotableConnection.connectTimeout = 10000
+                quotableConnection.readTimeout = 10000
                 
-                if (zenConnection.responseCode == 200) {
-                    val reader = BufferedReader(InputStreamReader(zenConnection.inputStream))
+                if (quotableConnection.responseCode == 200) {
+                    val reader = BufferedReader(InputStreamReader(quotableConnection.inputStream))
                     val response = reader.readText()
                     reader.close()
                     
-                    val jsonArray = org.json.JSONArray(response)
-                    if (jsonArray.length() > 0) {
-                        val jsonObject = jsonArray.getJSONObject(0)
-                        val content = jsonObject.getString("q")
-                        val author = jsonObject.getString("a")
-                        if (content.isNotEmpty() && author.isNotEmpty()) {
-                            quote = Pair(content, author)
-                        }
+                    val jsonObject = JSONObject(response)
+                    val content = jsonObject.getString("content")
+                    val author = jsonObject.getString("author")
+                    if (content.isNotEmpty() && author.isNotEmpty()) {
+                        quote = Pair(content, author)
                     }
                 }
-                zenConnection.disconnect()
+                quotableConnection.disconnect()
             } catch (e: Exception) {
-                // ZenQuotes failed, try Quotable
+                // Quotable failed, try ZenQuotes
             }
             
-            // Backup API: Quotable
+            // Backup API: ZenQuotes
             if (quote == null) {
                 try {
-                    val quotableUrl = URL("http://api.quotable.io/random")
-                    val quotableConnection = quotableUrl.openConnection() as HttpURLConnection
-                    quotableConnection.requestMethod = "GET"
-                    quotableConnection.connectTimeout = 10000
-                    quotableConnection.readTimeout = 10000
+                    val zenUrl = URL("https://zenquotes.io/api/random")
+                    val zenConnection = zenUrl.openConnection() as HttpURLConnection
+                    zenConnection.requestMethod = "GET"
+                    zenConnection.connectTimeout = 10000
+                    zenConnection.readTimeout = 10000
                     
-                    if (quotableConnection.responseCode == 200) {
-                        val reader = BufferedReader(InputStreamReader(quotableConnection.inputStream))
+                    if (zenConnection.responseCode == 200) {
+                        val reader = BufferedReader(InputStreamReader(zenConnection.inputStream))
                         val response = reader.readText()
                         reader.close()
                         
-                        val jsonObject = JSONObject(response)
-                        val content = jsonObject.getString("content")
-                        val author = jsonObject.getString("author")
-                        if (content.isNotEmpty() && author.isNotEmpty()) {
-                            quote = Pair(content, author)
+                        val jsonArray = org.json.JSONArray(response)
+                        if (jsonArray.length() > 0) {
+                            val jsonObject = jsonArray.getJSONObject(0)
+                            val content = jsonObject.getString("q")
+                            val author = jsonObject.getString("a")
+                            if (content.isNotEmpty() && author.isNotEmpty()) {
+                                quote = Pair(content, author)
+                            }
                         }
                     }
-                    quotableConnection.disconnect()
+                    zenConnection.disconnect()
                 } catch (e: Exception) {
                     // Both APIs failed
                 }
