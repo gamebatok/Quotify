@@ -84,7 +84,7 @@ const QuoteGenerator = () => {
       // Backup API: Try Quotable if ZenQuotes fails
       if (!quoteData) {
         try {
-          const quotableResponse = await fetch('https://api.quotable.io/random', {
+          const quotableResponse = await fetch('http://api.quotable.io/random', {
             method: 'GET',
             headers: {
               'Accept': 'application/json',
