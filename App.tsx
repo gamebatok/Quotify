@@ -1,21 +1,20 @@
 /**
- * Sample React Native App
- * https://github.com/facebook/react-native
- *
- * @format
+ * Quotify - Random Quote Generator
+ * A beautiful React Native app that displays inspiring quotes
  */
 
-import { NewAppScreen } from '@react-native/new-app-screen';
-import { StatusBar, StyleSheet, useColorScheme, View } from 'react-native';
+import React from 'react';
+import { SafeAreaView, StyleSheet } from 'react-native';
+import GradientBackground from './components/GradientBackground';
+import QuoteGenerator from './components/QuoteGenerator';
 
-function App() {
-  const isDarkMode = useColorScheme() === 'dark';
-
+function App(): React.JSX.Element {
   return (
-    <View style={styles.container}>
-      <StatusBar barStyle={isDarkMode ? 'light-content' : 'dark-content'} />
-      <NewAppScreen templateFileName="App.tsx" />
-    </View>
+    <SafeAreaView style={styles.container}>
+      <GradientBackground>
+        <QuoteGenerator />
+      </GradientBackground>
+    </SafeAreaView>
   );
 }
 
