@@ -5,8 +5,11 @@ import {
   ActivityIndicator,
   Alert,
   StatusBar,
+  TouchableOpacity,
+  Text,
 } from 'react-native';
 import QuoteCard from './QuoteCard';
+import FavoritesScreen from './FavoritesScreen';
 
 // Fallback quotes for offline use
 const fallbackQuotes = [
@@ -41,6 +44,7 @@ const QuoteGenerator = () => {
   const [author, setAuthor] = useState('');
   const [loading, setLoading] = useState(false);
   const [isOffline, setIsOffline] = useState(false);
+  const [currentScreen, setCurrentScreen] = useState('main'); // 'main' or 'favorites'
 
   const getRandomFallbackQuote = () => {
     const randomIndex = Math.floor(Math.random() * fallbackQuotes.length);
@@ -168,18 +172,33 @@ const QuoteGenerator = () => {
     <View style={styles.container}>
       <StatusBar barStyle="light-content" backgroundColor="#4F46E5" />
       
-      {quote && author ? (
-        <QuoteCard
-          quote={quote}
-          author={author}
-          onNewQuote={handleNewQuote}
-          loading={loading}
-          isOffline={isOffline}
-        />
+      {currentScreen === 'favorites' ? (
+        <FavoritesScreen onBack={() => setCurrentScreen('main')} />
       ) : (
-        <View style={styles.loadingContainer}>
-          <ActivityIndicator size="large" color="#FFFFFF" />
-        </View>
+        <>
+          {/* Favorites Button */}
+          <TouchableOpacity
+            style={styles.favoritesButton}
+            onPress={() => setCurrentScreen('favorites')}
+            activeOpacity={0.8}
+          >
+            <Text style={styles.favoritesButtonText}>❤️ My Favorites</Text>
+          </TouchableOpacity>
+
+          {quote && author ? (
+            <QuoteCard
+              quote={quote}
+              author={author}
+              onNewQuote={handleNewQuote}
+              loading={loading}
+              isOffline={isOffline}
+            />
+          ) : (
+            <View style={styles.loadingContainer}>
+              <ActivityIndicator size="large" color="#FFFFFF" />
+            </View>
+          )}
+        </>
       )}
     </View>
   );
@@ -190,6 +209,23 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
+  },
+  favoritesButton: {
+    position: 'absolute',
+    top: 60,
+    right: 20,
+    backgroundColor: 'rgba(255, 255, 255, 0.2)',
+    paddingHorizontal: 20,
+    paddingVertical: 12,
+    borderRadius: 25,
+    borderWidth: 1,
+    borderColor: 'rgba(255, 255, 255, 0.3)',
+    zIndex: 1,
+  },
+  favoritesButtonText: {
+    color: '#FFFFFF',
+    fontSize: 14,
+    fontWeight: '600',
   },
   loadingContainer: {
     flex: 1,

@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import {
   View,
   Text,
@@ -9,11 +9,90 @@ import {
   Share,
 } from 'react-native';
 import Clipboard from '@react-native-clipboard/clipboard';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const { width } = Dimensions.get('window');
 
 const QuoteCard = ({ quote, author, onNewQuote, loading, isOffline }) => {
   const [copySuccess, setCopySuccess] = useState(false);
+  const [isFavorite, setIsFavorite] = useState(false);
+  const [favoriteLoading, setFavoriteLoading] = useState(false);
+
+  // Create a unique key for each quote
+  const getQuoteKey = (quote, author) => {
+    return `${quote}_${author}`.replace(/[^a-zA-Z0-9]/g, '').toLowerCase();
+  };
+
+  // Check if current quote is favorited
+  const checkIfFavorite = async () => {
+    try {
+      const quoteKey = getQuoteKey(quote, author);
+      const favorites = await AsyncStorage.getItem('favoriteQuotes');
+      const favoritesArray = favorites ? JSON.parse(favorites) : [];
+      const isAlreadyFavorite = favoritesArray.some(fav => fav.key === quoteKey);
+      setIsFavorite(isAlreadyFavorite);
+    } catch (error) {
+      console.error('Error checking favorite status:', error);
+    }
+  };
+
+  // Toggle favorite status
+  const toggleFavorite = async () => {
+    setFavoriteLoading(true);
+    try {
+      const quoteKey = getQuoteKey(quote, author);
+      const favorites = await AsyncStorage.getItem('favoriteQuotes');
+      let favoritesArray = favorites ? JSON.parse(favorites) : [];
+
+      if (isFavorite) {
+        // Remove from favorites
+        favoritesArray = favoritesArray.filter(fav => fav.key !== quoteKey);
+        await AsyncStorage.setItem('favoriteQuotes', JSON.stringify(favoritesArray));
+        setIsFavorite(false);
+        
+        Alert.alert(
+          'Removed from Favorites',
+          'Quote has been removed from your favorites',
+          [{ text: 'OK' }],
+          { cancelable: true }
+        );
+      } else {
+        // Add to favorites
+        const newFavorite = {
+          key: quoteKey,
+          quote,
+          author,
+          dateAdded: new Date().toISOString(),
+        };
+        favoritesArray.push(newFavorite);
+        await AsyncStorage.setItem('favoriteQuotes', JSON.stringify(favoritesArray));
+        setIsFavorite(true);
+        
+        Alert.alert(
+          'Added to Favorites',
+          'Quote has been saved to your favorites',
+          [{ text: 'OK' }],
+          { cancelable: true }
+        );
+      }
+    } catch (error) {
+      console.error('Error toggling favorite:', error);
+      Alert.alert(
+        'Error',
+        'Unable to save favorite. Please try again.',
+        [{ text: 'OK' }]
+      );
+    } finally {
+      setFavoriteLoading(false);
+    }
+  };
+
+  // Check favorite status when quote changes
+  useEffect(() => {
+    if (quote && author) {
+      checkIfFavorite();
+    }
+  }, [quote, author]);
 
   const copyToClipboard = async () => {
     try {
@@ -62,7 +141,19 @@ const QuoteCard = ({ quote, author, onNewQuote, loading, isOffline }) => {
   return (
     <View style={styles.container}>
       <View style={styles.card}>
-        <Text style={styles.quoteIcon}>"</Text>
+        <View style={styles.cardHeader}>
+          <Text style={styles.quoteIcon}>"</Text>
+          <TouchableOpacity
+            style={[styles.favoriteButton, favoriteLoading && styles.favoriteButtonDisabled]}
+            onPress={toggleFavorite}
+            disabled={favoriteLoading}
+            activeOpacity={0.8}
+          >
+            <Text style={styles.favoriteIcon}>
+              {favoriteLoading ? '⏳' : isFavorite ? '❤️' : '🤍'}
+            </Text>
+          </TouchableOpacity>
+        </View>
         <Text style={styles.quoteText}>{quote}</Text>
         <View style={styles.authorContainer}>
           <Text style={styles.authorText}>— {author}</Text>
@@ -131,13 +222,33 @@ const styles = StyleSheet.create({
     shadowRadius: 20,
     elevation: 10,
   },
+  cardHeader: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'flex-start',
+    marginBottom: 10,
+  },
   quoteIcon: {
     fontSize: 60,
     color: '#6366F1',
     fontWeight: 'bold',
-    textAlign: 'center',
-    marginBottom: 10,
     opacity: 0.3,
+    flex: 1,
+    textAlign: 'center',
+  },
+  favoriteButton: {
+    padding: 5,
+    borderRadius: 20,
+    position: 'absolute',
+    top: -10,
+    right: -10,
+    zIndex: 1,
+  },
+  favoriteButtonDisabled: {
+    opacity: 0.6,
+  },
+  favoriteIcon: {
+    fontSize: 28,
   },
   quoteText: {
     fontSize: 18,
