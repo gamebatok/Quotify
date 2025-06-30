@@ -1,3 +1,4 @@
 <resources>
     <string name="app_name">Quotify</string>
+    <string name="widget_description">Display inspiring quotes on your home screen</string>
 </resources>

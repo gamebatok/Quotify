@@ -12,6 +12,7 @@ import {
 import Icon from 'react-native-vector-icons/Ionicons';
 import QuoteCard from './QuoteCard';
 import FavoritesScreen from './FavoritesScreen';
+import WidgetService from '../services/WidgetService';
 
 // Fallback quotes for offline use
 const fallbackQuotes = [
@@ -120,6 +121,9 @@ const QuoteGenerator = () => {
         setQuote(quoteData.content);
         setAuthor(quoteData.author);
         setIsOffline(false);
+        
+        // Update widget with new quote
+        await WidgetService.updateWidgetData();
       } else {
         throw new Error('No valid quote data received from any API');
       }
@@ -154,12 +158,15 @@ const QuoteGenerator = () => {
     }
   };
 
-  const handleNewQuote = () => {
+  const handleNewQuote = async () => {
     if (isOffline) {
       // If offline, just show another random fallback quote
       const fallbackQuote = getRandomFallbackQuote();
       setQuote(fallbackQuote.content);
       setAuthor(fallbackQuote.author);
+      
+      // Update widget with offline quote
+      await WidgetService.updateWidgetData();
     } else {
       // Try to fetch from API
       fetchRandomQuote();
