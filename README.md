@@ -1,97 +1,344 @@
-This is a new [**React Native**](https://reactnative.dev) project, bootstrapped using [`@react-native-community/cli`](https://github.com/react-native-community/cli).
+<div align="center">
 
-# Getting Started
+# 🌟 Quotify
 
-> **Note**: Make sure you have completed the [Set Up Your Environment](https://reactnative.dev/docs/set-up-your-environment) guide before proceeding.
+### *Daily inspiration at your fingertips*
 
-## Step 1: Start Metro
+A beautiful React Native app that brings you inspiring quotes with home screen widgets, favorites, and elegant design.
 
-First, you will need to run **Metro**, the JavaScript build tool for React Native.
+[![React Native](https://img.shields.io/badge/React%20Native-0.80.0-blue.svg)](https://reactnative.dev/)
+[![Platform](https://img.shields.io/badge/platform-iOS%20%7C%20Android-lightgrey.svg)](https://github.com/facebook/react-native)
+[![License](https://img.shields.io/badge/license-MIT-green.svg)](LICENSE)
+[![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg)](CONTRIBUTING.md)
 
-To start the Metro dev server, run the following command from the root of your React Native project:
+[Features](#-features) • [Screenshots](#-screenshots) • [Installation](#-installation) • [Usage](#-usage) • [Widgets](#-widgets) • [Contributing](#-contributing)
 
-```sh
-# Using npm
-npm start
+</div>
 
-# OR using Yarn
-yarn start
+---
+
+## ✨ Features
+
+### 🎯 **Core Features**
+- **Random Quote Generation** - Fetch inspiring quotes from multiple APIs
+- **Offline Support** - Fallback quotes when no internet connection
+- **Favorites System** - Save and manage your favorite quotes
+- **Beautiful UI** - Stunning gradient backgrounds and modern design
+- **Cross-Platform** - Available for both iOS and Android
+
+### 📱 **Home Screen Widgets**
+- **iOS Widgets** - WidgetKit-based home screen widgets
+- **Android Widgets** - Native home screen widgets
+- **Auto-Updates** - Widgets refresh every 30 minutes
+- **Manual Refresh** - Tap to refresh widget content
+- **Seamless Sync** - Widgets update when you fetch new quotes in the app
+
+### 🚀 **Smart Features**
+- **Multiple APIs** - ZenQuotes and Quotable APIs for reliability
+- **Network Resilience** - Automatic fallback to backup APIs
+- **Share Functionality** - Share quotes with friends
+- **Copy to Clipboard** - Quick copy for easy sharing
+- **Elegant Animations** - Smooth transitions and loading states
+
+---
+
+## 📸 Screenshots
+
+### Main App Experience
+<div align="center">
+  <table>
+    <tr>
+      <td align="center"><strong>iOS</strong></td>
+      <td align="center"><strong>Android</strong></td>
+    </tr>
+    <tr>
+      <td><img src="screenshots/homescreen-ios.png" width="250" alt="iOS Home Screen"></td>
+      <td><img src="screenshots/homescreen-android.png" width="250" alt="Android Home Screen"></td>
+    </tr>
+    <tr>
+      <td><em>Beautiful gradient UI with inspiring quotes</em></td>
+      <td><em>Cross-platform consistency</em></td>
+    </tr>
+  </table>
+</div>
+
+### Favorites & Sharing
+<div align="center">
+  <table>
+    <tr>
+      <td align="center"><strong>Favorites Management</strong></td>
+      <td align="center"><strong>Adding to Favorites</strong></td>
+    </tr>
+    <tr>
+      <td><img src="screenshots/favourites-screen-ios.png" width="250" alt="iOS Favorites Screen"></td>
+      <td><img src="screenshots/favourite-quote-ios.png" width="250" alt="iOS Add to Favorites"></td>
+    </tr>
+    <tr>
+      <td><img src="screenshots/favourites-screen-android.png" width="250" alt="Android Favorites Screen"></td>
+      <td><img src="screenshots/favourite-quote-android.png" width="250" alt="Android Add to Favorites"></td>
+    </tr>
+    <tr>
+      <td><em>Manage your saved quotes</em></td>
+      <td><em>Heart to save inspirational quotes</em></td>
+    </tr>
+  </table>
+</div>
+
+### Share Functionality
+<div align="center">
+  <table>
+    <tr>
+      <td align="center"><strong>iOS Share</strong></td>
+      <td align="center"><strong>Android Share</strong></td>
+    </tr>
+    <tr>
+      <td><img src="screenshots/share-quote-ios.png" width="250" alt="iOS Share Quote"></td>
+      <td><img src="screenshots/share-quote-android.png" width="250" alt="Android Share Quote"></td>
+    </tr>
+    <tr>
+      <td><em>Native iOS sharing experience</em></td>
+      <td><em>Android system share integration</em></td>
+    </tr>
+  </table>
+</div>
+
+### Home Screen Widgets
+<div align="center">
+  <table>
+    <tr>
+      <td align="center"><strong>iOS Widget</strong></td>
+      <td align="center"><strong>Android Widget</strong></td>
+    </tr>
+    <tr>
+      <td><img src="screenshots/widget-ios.png" width="300" alt="iOS Home Screen Widget"></td>
+      <td><img src="screenshots/widget-android.png" width="300" alt="Android Home Screen Widget"></td>
+    </tr>
+    <tr>
+      <td><em>WidgetKit integration with auto-updates</em></td>
+      <td><em>Native Android widget with refresh button</em></td>
+    </tr>
+  </table>
+</div>
+
+---
+
+## 🛠 Installation
+
+### Prerequisites
+
+- **Node.js** 18+ 
+- **React Native CLI** 
+- **Android Studio** (for Android development)
+- **Xcode** 12+ (for iOS development)
+
+### Quick Start
+
+1. **Clone the repository**
+   ```bash
+   git clone https://github.com/yourusername/quotify.git
+   cd quotify
+   ```
+
+2. **Install dependencies**
+   ```bash
+   npm install
+   ```
+
+3. **iOS Setup**
+   ```bash
+   cd ios
+   bundle install
+   bundle exec pod install
+   cd ..
+   ```
+
+4. **Run the app**
+   ```bash
+   # For iOS
+   npm run ios
+   
+   # For Android
+   npm run android
+   ```
+
+---
+
+## 🎮 Usage
+
+### Getting Started
+1. **Launch the app** to see your first inspiring quote
+2. **Tap "New Quote"** to fetch a fresh quote from our curated sources
+3. **Tap the heart icon** to save quotes to your favorites
+4. **Use the share button** to spread inspiration with friends
+5. **Access favorites** via the favorites button in the top corner
+
+### Offline Mode
+- Quotify works offline with a curated selection of fallback quotes
+- The app automatically switches to offline mode when connectivity is limited
+- All saved favorites are available offline
+
+---
+
+## 📲 Widgets
+
+### Android Widgets
+1. **Long press** on your home screen
+2. **Select "Widgets"** from the menu
+3. **Find and add** the Quotify widget
+4. **Enjoy** automatic quote updates every 30 minutes
+
+### iOS Widgets
+1. **Long press** on your home screen
+2. **Tap the "+" button** in the top corner
+3. **Search for "Quotify"** in the widget gallery
+4. **Choose your size** (Small or Medium) and add to home screen
+
+### Widget Features
+- ✅ Auto-refresh every 30 minutes
+- ✅ Manual refresh by tapping
+- ✅ Seamless app integration
+- ✅ Beautiful gradient design
+- ✅ Offline support with cached quotes
+
+---
+
+## 🏗 Tech Stack
+
+### Core Technologies
+- **React Native** 0.80.0 - Cross-platform mobile framework
+- **TypeScript** - Type-safe JavaScript
+- **React** 19.1.0 - UI library
+
+### Key Libraries
+- **AsyncStorage** - Local data persistence
+- **Vector Icons** - Beautiful iconography
+- **Linear Gradient** - Stunning visual effects
+- **Clipboard** - Copy functionality
+- **Push Notifications** - Future notification features
+
+### APIs Used
+- **ZenQuotes API** - Primary quote source
+- **Quotable API** - Backup quote source
+
+---
+
+## 🔧 Development
+
+### Project Structure
+```
+quotify/
+├── components/           # React Native components
+│   ├── QuoteGenerator.jsx    # Main quote display
+│   ├── FavoritesScreen.jsx   # Favorites management
+│   ├── QuoteCard.jsx         # Quote display card
+│   └── GradientBackground.jsx # UI background
+├── services/            # Business logic
+│   └── WidgetService.js     # Widget management
+├── android/             # Android-specific code
+│   └── app/src/main/java/com/quotify/
+├── ios/                 # iOS-specific code
+│   └── QuotifyWidget/       # iOS widget extension
+└── __tests__/           # Test files
 ```
 
-## Step 2: Build and run your app
+### Available Scripts
 
-With Metro running, open a new terminal window/pane from the root of your React Native project, and use one of the following commands to build and run your Android or iOS app:
+```bash
+# Development
+npm start              # Start Metro bundler
+npm run android        # Run on Android
+npm run ios           # Run on iOS
 
-### Android
+# Quality
+npm run lint          # Run ESLint
+npm test             # Run tests
 
-```sh
-# Using npm
-npm run android
-
-# OR using Yarn
-yarn android
+# Production
+npm run build        # Build for production
 ```
 
-### iOS
+---
 
-For iOS, remember to install CocoaPods dependencies (this only needs to be run on first clone or after updating native deps).
+## 🎨 Customization
 
-The first time you create a new project, run the Ruby bundler to install CocoaPods itself:
+### Themes
+The app uses a beautiful gradient theme by default. You can customize colors in:
+- `components/GradientBackground.jsx`
+- Individual component stylesheets
 
-```sh
-bundle install
-```
+### Quote Sources
+Add new quote APIs by modifying:
+- `components/QuoteGenerator.jsx`
+- `services/WidgetService.js`
 
-Then, and every time you update your native dependencies, run:
+### Widget Appearance
+Customize widget design in:
+- **Android**: `android/app/src/main/res/layout/quote_widget.xml`
+- **iOS**: `ios/QuotifyWidget/QuotifyWidget.swift`
 
-```sh
-bundle exec pod install
-```
+---
 
-For more information, please visit [CocoaPods Getting Started guide](https://guides.cocoapods.org/using/getting-started.html).
+## 📋 Roadmap
 
-```sh
-# Using npm
-npm run ios
+### Upcoming Features
+- [ ] **Dark Mode** - Toggle between light and dark themes
+- [ ] **Custom Categories** - Filter quotes by category
+- [ ] **Daily Notifications** - Optional daily quote notifications
+- [ ] **Quote History** - View previously shown quotes
+- [ ] **Custom Quote Sources** - Add your own quote APIs
+- [ ] **Social Features** - Share and discover quotes with friends
 
-# OR using Yarn
-yarn ios
-```
+### Widget Enhancements
+- [ ] **Widget Themes** - Multiple widget color schemes
+- [ ] **Widget Sizes** - Additional widget size options
+- [ ] **Interactive Widgets** - Tap actions for different functions
+- [ ] **Multiple Widgets** - Support for multiple widget instances
 
-If everything is set up correctly, you should see your new app running in the Android Emulator, iOS Simulator, or your connected device.
+---
 
-This is one way to run your app — you can also build it directly from Android Studio or Xcode.
+## 🐛 Troubleshooting
 
-## Step 3: Modify your app
+### Common Issues
 
-Now that you have successfully run the app, let's make changes!
+**Widget not appearing**
+- Ensure the app is installed and launched at least once
+- Check device storage space
+- Restart your device if needed
 
-Open `App.tsx` in your text editor of choice and make some changes. When you save, your app will automatically update and reflect these changes — this is powered by [Fast Refresh](https://reactnative.dev/docs/fast-refresh).
+**Quotes not loading**
+- Check internet connection
+- App will automatically use offline quotes if APIs are unavailable
+- Force close and restart the app
 
-When you want to forcefully reload, for example to reset the state of your app, you can perform a full reload:
+**iOS Widget not updating**
+- Ensure iOS 14+ is installed
+- Check widget settings in iOS Settings > General > Background App Refresh
 
-- **Android**: Press the <kbd>R</kbd> key twice or select **"Reload"** from the **Dev Menu**, accessed via <kbd>Ctrl</kbd> + <kbd>M</kbd> (Windows/Linux) or <kbd>Cmd ⌘</kbd> + <kbd>M</kbd> (macOS).
-- **iOS**: Press <kbd>R</kbd> in iOS Simulator.
+---
 
-## Congratulations! :tada:
+## 📄 License
 
-You've successfully run and modified your React Native App. :partying_face:
+This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
 
-### Now what?
+---
 
-- If you want to add this new React Native code to an existing application, check out the [Integration guide](https://reactnative.dev/docs/integration-with-existing-apps).
-- If you're curious to learn more about React Native, check out the [docs](https://reactnative.dev/docs/getting-started).
+## 💫 Support
 
-# Troubleshooting
+Love Quotify? Here's how you can show support:
 
-If you're having issues getting the above steps to work, see the [Troubleshooting](https://reactnative.dev/docs/troubleshooting) page.
+- ⭐ **Star this repository**
+- 🐛 **Report bugs** via GitHub Issues
+- 💡 **Suggest features** via GitHub Issues
+- 🔄 **Share with friends** and spread the inspiration
 
-# Learn More
+---
 
-To learn more about React Native, take a look at the following resources:
+<div align="center">
 
-- [React Native Website](https://reactnative.dev) - learn more about React Native.
-- [Getting Started](https://reactnative.dev/docs/environment-setup) - an **overview** of React Native and how setup your environment.
-- [Learn the Basics](https://reactnative.dev/docs/getting-started) - a **guided tour** of the React Native **basics**.
-- [Blog](https://reactnative.dev/blog) - read the latest official React Native **Blog** posts.
-- [`@facebook/react-native`](https://github.com/facebook/react-native) - the Open Source; GitHub **repository** for React Native.
+### Made with ❤️ and React Native
+
+*Bringing daily inspiration to your mobile device*
+
+[⬆ Back to top](#-quotify)
+
+</div>
