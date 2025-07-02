@@ -1,33 +1,6 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { Platform } from 'react-native';
-
-// Fallback quotes for offline use
-const fallbackQuotes = [
-  {
-    content: "The only way to do great work is to love what you do.",
-    author: "Steve Jobs"
-  },
-  {
-    content: "Innovation distinguishes between a leader and a follower.",
-    author: "Steve Jobs"
-  },
-  {
-    content: "Life is what happens to you while you're busy making other plans.",
-    author: "John Lennon"
-  },
-  {
-    content: "The future belongs to those who believe in the beauty of their dreams.",
-    author: "Eleanor Roosevelt"
-  },
-  {
-    content: "It is during our darkest moments that we must focus to see the light.",
-    author: "Aristotle"
-  },
-  {
-    content: "Success is not final, failure is not fatal: it is the courage to continue that counts.",
-    author: "Winston Churchill"
-  }
-];
+import QuoteService from './QuoteService';
 
 class WidgetService {
   static APP_GROUP_ID = 'group.com.dhruvchheda.quotify.widgets';
@@ -35,86 +8,13 @@ class WidgetService {
   static WIDGET_AUTHOR_KEY = 'widget_author';
   static WIDGET_LAST_UPDATE_KEY = 'widget_last_update';
 
-  static getRandomFallbackQuote() {
-    const randomIndex = Math.floor(Math.random() * fallbackQuotes.length);
-    return fallbackQuotes[randomIndex];
-  }
-
-  static async fetchQuoteFromAPI() {
-    try {
-      console.log('Fetching quote for widget...');
-      
-      const controller = new AbortController();
-      const timeoutId = setTimeout(() => controller.abort(), 10000);
-      
-      let quoteData = null;
-      
-      // Try ZenQuotes first
-      try {
-        const zenResponse = await fetch('https://zenquotes.io/api/random', {
-          method: 'GET',
-          headers: {
-            'Accept': 'application/json',
-          },
-          signal: controller.signal,
-        });
-        
-        if (zenResponse.ok) {
-          const zenData = await zenResponse.json();
-          if (zenData && zenData[0] && zenData[0].q && zenData[0].a) {
-            quoteData = {
-              content: zenData[0].q,
-              author: zenData[0].a
-            };
-          }
-        }
-      } catch (zenError) {
-        console.log('ZenQuotes failed for widget, trying backup API...');
-      }
-      
-      // Backup API: Quotable
-      if (!quoteData) {
-        try {
-          const quotableResponse = await fetch('http://api.quotable.io/random', {
-            method: 'GET',
-            headers: {
-              'Accept': 'application/json',
-              'Content-Type': 'application/json',
-            },
-            signal: controller.signal,
-          });
-          
-          if (quotableResponse.ok) {
-            const quotableData = await quotableResponse.json();
-            if (quotableData && quotableData.content && quotableData.author) {
-              quoteData = {
-                content: quotableData.content,
-                author: quotableData.author
-              };
-            }
-          }
-        } catch (quotableError) {
-          console.log('Quotable API also failed for widget:', quotableError.message);
-        }
-      }
-      
-      clearTimeout(timeoutId);
-      
-      if (quoteData && quoteData.content && quoteData.author) {
-        return quoteData;
-      } else {
-        throw new Error('No valid quote data received from any API');
-      }
-    } catch (error) {
-      console.error('Widget quote fetch error:', error);
-      // Return fallback quote
-      return this.getRandomFallbackQuote();
-    }
+  static getRandomQuote() {
+    return QuoteService.getRandomQuote();
   }
 
   static async updateWidgetData() {
     try {
-      const quoteData = await this.fetchQuoteFromAPI();
+      const quoteData = this.getRandomQuote();
       const timestamp = new Date().toISOString();
       
       // Use AsyncStorage for both platforms
@@ -150,7 +50,7 @@ class WidgetService {
       }
     } catch (error) {
       console.error('Failed to get widget data:', error);
-      return this.getRandomFallbackQuote();
+      return this.getRandomQuote();
     }
   }
 

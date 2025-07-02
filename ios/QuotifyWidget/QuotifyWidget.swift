@@ -108,10 +108,10 @@ struct Provider: TimelineProvider {
     
     private func fetchQuote() async -> QuoteData {
         print("QuotifyWidget: Fetching quote")
-        // Try to fetch from API, fallback to stored or default
-        if let apiQuote = await fetchQuoteFromAPI() {
-            storeQuote(apiQuote)
-            return apiQuote
+        // Try to fetch from local JSON file, fallback to stored or default
+        if let localQuote = fetchQuoteFromLocalFile() {
+            storeQuote(localQuote)
+            return localQuote
         }
         
         if let storedQuote = getStoredQuote() {
@@ -123,53 +123,32 @@ struct Provider: TimelineProvider {
         return getRandomFallbackQuote()
     }
     
-    private func fetchQuoteFromAPI() async -> QuoteData? {
-        print("QuotifyWidget: Fetching from API")
-        // Try Quotable first (better rate limits than ZenQuotes)
-        if let quotableQuote = await fetchFromQuotable() {
-            return quotableQuote
-        }
+    private func fetchQuoteFromLocalFile() -> QuoteData? {
+        print("QuotifyWidget: Fetching from local JSON file")
         
-        // Try ZenQuotes as backup
-        if let zenQuote = await fetchFromZenQuotes() {
-            return zenQuote
+        guard let path = Bundle.main.path(forResource: "quotes", ofType: "json"),
+              let data = try? Data(contentsOf: URL(fileURLWithPath: path)) else {
+            print("QuotifyWidget: Failed to load local JSON file")
+            return nil
         }
-        
-        return nil
-    }
-    
-    private func fetchFromQuotable() async -> QuoteData? {
-        guard let url = URL(string: "https://api.quotable.io/random") else { return nil }
         
         do {
-            let (data, _) = try await URLSession.shared.data(from: url)
             if let json = try JSONSerialization.jsonObject(with: data) as? [String: Any],
-               let content = json["content"] as? String,
-               let author = json["author"] as? String {
-                print("QuotifyWidget: Got quote from Quotable")
-                return QuoteData(content: content, author: author, lastUpdate: nil)
+               let quotes = json["quotes"] as? [[String: Any]],
+               !quotes.isEmpty {
+                
+                let randomIndex = Int.random(in: 0..<quotes.count)
+                let selectedQuote = quotes[randomIndex]
+                
+                if let content = selectedQuote["content"] as? String,
+                   let author = selectedQuote["author"] as? String,
+                   !content.isEmpty, !author.isEmpty {
+                    print("QuotifyWidget: Got quote from local file: \(content) by \(author)")
+                    return QuoteData(content: content, author: author, lastUpdate: nil)
+                }
             }
         } catch {
-            print("QuotifyWidget: Quotable API error: \(error)")
-        }
-        
-        return nil
-    }
-    
-    private func fetchFromZenQuotes() async -> QuoteData? {
-        guard let url = URL(string: "https://zenquotes.io/api/random") else { return nil }
-        
-        do {
-            let (data, _) = try await URLSession.shared.data(from: url)
-            if let jsonArray = try JSONSerialization.jsonObject(with: data) as? [[String: Any]],
-               let first = jsonArray.first,
-               let content = first["q"] as? String,
-               let author = first["a"] as? String {
-                print("QuotifyWidget: Got quote from ZenQuotes")
-                return QuoteData(content: content, author: author, lastUpdate: nil)
-            }
-        } catch {
-            print("QuotifyWidget: ZenQuotes API error: \(error)")
+            print("QuotifyWidget: Error parsing local JSON file: \(error)")
         }
         
         return nil

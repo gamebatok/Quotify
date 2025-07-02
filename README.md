@@ -4,7 +4,7 @@
 
 ### *Daily inspiration at your fingertips*
 
-A beautiful React Native app that brings you inspiring quotes with home screen widgets, favorites, and elegant design.
+A beautiful React Native app with 2,127+ inspiring quotes, home screen widgets, and elegant design. Works completely offline with instant quote loading.
 
 [![React Native](https://img.shields.io/badge/React%20Native-0.80.0-blue.svg)](https://reactnative.dev/)
 [![Platform](https://img.shields.io/badge/platform-iOS%20%7C%20Android-lightgrey.svg)](https://github.com/facebook/react-native)
@@ -19,8 +19,8 @@ A beautiful React Native app that brings you inspiring quotes with home screen w
 ## ✨ Features
 
 ### 🎯 **Core Features**
-- **Random Quote Generation** - Fetch inspiring quotes from multiple APIs
-- **Offline Support** - Fallback quotes when no internet connection
+- **Random Quote Generation** - Instant access to 2,127+ inspiring quotes
+- **Fully Offline** - No internet connection required, works anywhere
 - **Favorites System** - Save and manage your favorite quotes
 - **Beautiful UI** - Stunning gradient backgrounds and modern design
 - **Cross-Platform** - Available for both iOS and Android
@@ -33,8 +33,8 @@ A beautiful React Native app that brings you inspiring quotes with home screen w
 - **Seamless Sync** - Widgets update when you fetch new quotes in the app
 
 ### 🚀 **Smart Features**
-- **Multiple APIs** - ZenQuotes and Quotable APIs for reliability
-- **Network Resilience** - Automatic fallback to backup APIs
+- **Local Quote Database** - 2,127+ curated quotes stored locally for instant access
+- **Lightning Fast** - No loading times or network dependencies
 - **Share Functionality** - Share quotes with friends
 - **Copy to Clipboard** - Quick copy for easy sharing
 - **Elegant Animations** - Smooth transitions and loading states
@@ -166,15 +166,16 @@ A beautiful React Native app that brings you inspiring quotes with home screen w
 
 ### Getting Started
 1. **Launch the app** to see your first inspiring quote
-2. **Tap "New Quote"** to fetch a fresh quote from our curated sources
+2. **Tap "New Quote"** to instantly get a fresh quote from our local collection
 3. **Tap the heart icon** to save quotes to your favorites
 4. **Use the share button** to spread inspiration with friends
 5. **Access favorites** via the favorites button in the top corner
 
-### Offline Mode
-- Quotify works offline with a curated selection of fallback quotes
-- The app automatically switches to offline mode when connectivity is limited
-- All saved favorites are available offline
+### Always Available
+- Quotify works completely offline with 2,127+ curated quotes stored locally
+- No internet connection required - perfect for travel or low connectivity areas
+- Instant quote loading with no network delays
+- All features including favorites work without any internet connection
 
 ---
 
@@ -197,7 +198,7 @@ A beautiful React Native app that brings you inspiring quotes with home screen w
 - ✅ Manual refresh by tapping
 - ✅ Seamless app integration
 - ✅ Beautiful gradient design
-- ✅ Offline support with cached quotes
+- ✅ Works completely offline with local quotes
 
 ---
 
@@ -209,15 +210,15 @@ A beautiful React Native app that brings you inspiring quotes with home screen w
 - **React** 19.1.0 - UI library
 
 ### Key Libraries
-- **AsyncStorage** - Local data persistence
+- **AsyncStorage** - Local data persistence and favorites management
 - **Vector Icons** - Beautiful iconography
 - **Linear Gradient** - Stunning visual effects
 - **Clipboard** - Copy functionality
 - **Push Notifications** - Future notification features
 
-### APIs Used
-- **ZenQuotes API** - Primary quote source
-- **Quotable API** - Backup quote source
+### Data Source
+- **Local Quote Database** - 2,127+ curated quotes stored in JSON format
+- **No External Dependencies** - Completely self-contained for maximum reliability
 
 ---
 
@@ -232,7 +233,9 @@ quotify/
 │   ├── QuoteCard.jsx         # Quote display card
 │   └── GradientBackground.jsx # UI background
 ├── services/            # Business logic
+│   ├── QuoteService.js      # Local quote management
 │   └── WidgetService.js     # Widget management
+├── quotes.json          # Local database of 2,127+ quotes
 ├── android/             # Android-specific code
 │   └── app/src/main/java/com/quotify/
 ├── ios/                 # iOS-specific code
@@ -265,10 +268,11 @@ The app uses a beautiful gradient theme by default. You can customize colors in:
 - `components/GradientBackground.jsx`
 - Individual component stylesheets
 
-### Quote Sources
-Add new quote APIs by modifying:
-- `components/QuoteGenerator.jsx`
-- `services/WidgetService.js`
+### Quote Database
+The app uses a local JSON database with 2,127+ quotes. To customize:
+- **Add quotes**: Edit `quotes.json` following the existing format
+- **Quote logic**: Modify `services/QuoteService.js`
+- **Widget integration**: Update `services/WidgetService.js`
 
 ### Widget Appearance
 Customize widget design in:
@@ -284,7 +288,7 @@ Customize widget design in:
 - [ ] **Custom Categories** - Filter quotes by category
 - [ ] **Daily Notifications** - Optional daily quote notifications
 - [ ] **Quote History** - View previously shown quotes
-- [ ] **Custom Quote Sources** - Add your own quote APIs
+- [ ] **Import/Export Quotes** - Add your own custom quotes to the database
 - [ ] **Social Features** - Share and discover quotes with friends
 
 ### Widget Enhancements
@@ -305,9 +309,9 @@ Customize widget design in:
 - Restart your device if needed
 
 **Quotes not loading**
-- Check internet connection
-- App will automatically use offline quotes if APIs are unavailable
 - Force close and restart the app
+- Ensure the app has sufficient storage space
+- Check that quotes.json file is properly included in the app bundle
 
 **iOS Widget not updating**
 - Ensure iOS 14+ is installed

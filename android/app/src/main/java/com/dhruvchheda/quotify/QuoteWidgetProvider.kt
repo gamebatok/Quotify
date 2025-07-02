@@ -99,7 +99,7 @@ class QuoteWidgetProvider : AppWidgetProvider() {
 
     private fun fetchAndUpdateQuote(context: Context, appWidgetManager: AppWidgetManager, appWidgetId: Int) {
         Log.d("QuoteWidget", "Fetching new quote for widget $appWidgetId")
-        val quoteData = fetchQuoteFromAPI()
+        val quoteData = fetchQuoteFromLocalFile(context)
         
         Log.d("QuoteWidget", "Got quote: ${quoteData.first} by ${quoteData.second}")
         
@@ -129,67 +129,37 @@ class QuoteWidgetProvider : AppWidgetProvider() {
         appWidgetManager.updateAppWidget(appWidgetId, views)
     }
 
-    private fun fetchQuoteFromAPI(): Pair<String, String> {
+    private fun fetchQuoteFromLocalFile(context: Context): Pair<String, String> {
         return try {
-            // Try Quotable first (better rate limits than ZenQuotes)
-            var quote: Pair<String, String>? = null
+            Log.d("QuoteWidget", "Loading quote from local JSON file")
             
-            try {
-                val quotableUrl = URL("https://api.quotable.io/random")
-                val quotableConnection = quotableUrl.openConnection() as HttpURLConnection
-                quotableConnection.requestMethod = "GET"
-                quotableConnection.connectTimeout = 10000
-                quotableConnection.readTimeout = 10000
+            val inputStream = context.assets.open("quotes.json")
+            val size = inputStream.available()
+            val buffer = ByteArray(size)
+            inputStream.read(buffer)
+            inputStream.close()
+            
+            val jsonString = String(buffer, Charsets.UTF_8)
+            val jsonObject = JSONObject(jsonString)
+            val quotesArray = jsonObject.getJSONArray("quotes")
+            
+            if (quotesArray.length() > 0) {
+                val randomIndex = Random.nextInt(quotesArray.length())
+                val selectedQuote = quotesArray.getJSONObject(randomIndex)
                 
-                if (quotableConnection.responseCode == 200) {
-                    val reader = BufferedReader(InputStreamReader(quotableConnection.inputStream))
-                    val response = reader.readText()
-                    reader.close()
-                    
-                    val jsonObject = JSONObject(response)
-                    val content = jsonObject.getString("content")
-                    val author = jsonObject.getString("author")
-                    if (content.isNotEmpty() && author.isNotEmpty()) {
-                        quote = Pair(content, author)
-                    }
-                }
-                quotableConnection.disconnect()
-            } catch (e: Exception) {
-                // Quotable failed, try ZenQuotes
-            }
-            
-            // Backup API: ZenQuotes
-            if (quote == null) {
-                try {
-                    val zenUrl = URL("https://zenquotes.io/api/random")
-                    val zenConnection = zenUrl.openConnection() as HttpURLConnection
-                    zenConnection.requestMethod = "GET"
-                    zenConnection.connectTimeout = 10000
-                    zenConnection.readTimeout = 10000
-                    
-                    if (zenConnection.responseCode == 200) {
-                        val reader = BufferedReader(InputStreamReader(zenConnection.inputStream))
-                        val response = reader.readText()
-                        reader.close()
-                        
-                        val jsonArray = org.json.JSONArray(response)
-                        if (jsonArray.length() > 0) {
-                            val jsonObject = jsonArray.getJSONObject(0)
-                            val content = jsonObject.getString("q")
-                            val author = jsonObject.getString("a")
-                            if (content.isNotEmpty() && author.isNotEmpty()) {
-                                quote = Pair(content, author)
-                            }
-                        }
-                    }
-                    zenConnection.disconnect()
-                } catch (e: Exception) {
-                    // Both APIs failed
+                val content = selectedQuote.getString("content")
+                val author = selectedQuote.getString("author")
+                
+                if (content.isNotEmpty() && author.isNotEmpty()) {
+                    Log.d("QuoteWidget", "Successfully loaded quote from local file: $content by $author")
+                    return Pair(content, author)
                 }
             }
             
-            quote ?: getRandomFallbackQuote()
+            Log.w("QuoteWidget", "Failed to load valid quote from local file, using fallback")
+            getRandomFallbackQuote()
         } catch (e: Exception) {
+            Log.e("QuoteWidget", "Error loading quote from local file: ${e.message}", e)
             getRandomFallbackQuote()
         }
     }
