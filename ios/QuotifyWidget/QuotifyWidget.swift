@@ -14,7 +14,9 @@ struct QuoteData: Codable {
 }
 
 struct Provider: TimelineProvider {
-    private let appGroupId = "group.com.quotify.widgets"
+    private let appGroupId = "group.com.dhruvchheda.quotify.widgets"
+    private let widgetQuoteKey = "widget_quote"
+    private let widgetAuthorKey = "widget_author"
     
     func placeholder(in context: Context) -> SimpleEntry {
         SimpleEntry(date: Date(), quote: QuoteData.placeholder)
@@ -54,8 +56,8 @@ struct Provider: TimelineProvider {
         
         // Try to read from App Group first (for shared data with React Native app)
         if let userDefaults = UserDefaults(suiteName: appGroupId) {
-            let content = userDefaults.string(forKey: "widget_quote") ?? ""
-            let author = userDefaults.string(forKey: "widget_author") ?? ""
+            let content = userDefaults.string(forKey: widgetQuoteKey) ?? ""
+            let author = userDefaults.string(forKey: widgetAuthorKey) ?? ""
             let lastUpdate = userDefaults.string(forKey: "widget_last_update")
             
             print("QuotifyWidget: App Group data - Quote: \(content), Author: \(author)")
@@ -66,8 +68,8 @@ struct Provider: TimelineProvider {
         }
         
         // Fallback to standard UserDefaults
-        let content = UserDefaults.standard.string(forKey: "widget_quote") ?? ""
-        let author = UserDefaults.standard.string(forKey: "widget_author") ?? ""
+        let content = UserDefaults.standard.string(forKey: widgetQuoteKey) ?? ""
+        let author = UserDefaults.standard.string(forKey: widgetAuthorKey) ?? ""
         let lastUpdate = UserDefaults.standard.string(forKey: "widget_last_update")
         
         print("QuotifyWidget: Standard UserDefaults - Quote: \(content), Author: \(author)")
@@ -87,8 +89,8 @@ struct Provider: TimelineProvider {
         
         // Store in App Group if available
         if let userDefaults = UserDefaults(suiteName: appGroupId) {
-            userDefaults.set(quote.content, forKey: "widget_quote")
-            userDefaults.set(quote.author, forKey: "widget_author")
+            userDefaults.set(quote.content, forKey: widgetQuoteKey)
+            userDefaults.set(quote.author, forKey: widgetAuthorKey)
             userDefaults.set(timestamp, forKey: "widget_last_update")
             userDefaults.synchronize()
             print("QuotifyWidget: Stored in App Group")
@@ -97,8 +99,8 @@ struct Provider: TimelineProvider {
         }
         
         // Also store in standard UserDefaults as fallback
-        UserDefaults.standard.set(quote.content, forKey: "widget_quote")
-        UserDefaults.standard.set(quote.author, forKey: "widget_author")
+        UserDefaults.standard.set(quote.content, forKey: widgetQuoteKey)
+        UserDefaults.standard.set(quote.author, forKey: widgetAuthorKey)
         UserDefaults.standard.set(timestamp, forKey: "widget_last_update")
         UserDefaults.standard.synchronize()
         print("QuotifyWidget: Stored in standard UserDefaults")

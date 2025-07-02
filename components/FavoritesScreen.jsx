@@ -11,7 +11,7 @@ import {
   Platform,
 } from 'react-native';
 import Icon from 'react-native-vector-icons/Ionicons';
-import MaterialDesignIcons from 'react-native-vector-icons/MaterialCommunityIcons';
+import MaterialDesignIcons from 'react-native-vector-icons/MaterialIcons';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import LinearGradient from 'react-native-linear-gradient';
 
@@ -78,13 +78,13 @@ const FavoritesScreen = ({ onBack }) => {
     <View style={styles.quoteItem}>
       <View style={styles.quoteContent}>
         <View style={styles.quoteHeader}>
-          <MaterialDesignIcons name="format-quote-open" size={20} color="#667eea" style={styles.quoteIconSmall} />
+          <MaterialDesignIcons name="format-quote" size={20} color="#667eea" style={styles.quoteIconSmall} />
           <Icon name="heart" size={14} color="#e74c3c" />
         </View>
         <Text style={styles.quoteText}>"{item.quote}"</Text>
         <Text style={styles.authorText}>— {item.author}</Text>
         <View style={styles.dateContainer}>
-          <MaterialDesignIcons name="calendar" size={12} color="#bdc3c7" />
+          <MaterialDesignIcons name="today" size={12} color="#bdc3c7" />
           <Text style={styles.dateText}>
             Saved on {formatDate(item.dateAdded)}
           </Text>

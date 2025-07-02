@@ -1,4 +1,4 @@
-package com.quotify
+package com.dhruvchheda.quotify
 
 import android.app.PendingIntent
 import android.appwidget.AppWidgetManager
@@ -19,7 +19,7 @@ import kotlin.random.Random
 class QuoteWidgetProvider : AppWidgetProvider() {
 
     companion object {
-        const val ACTION_REFRESH_WIDGET = "com.quotify.REFRESH_WIDGET"
+        const val ACTION_REFRESH_WIDGET = "com.dhruvchheda.quotify.REFRESH_WIDGET"
         const val WIDGET_QUOTE_KEY = "widget_quote"
         const val WIDGET_AUTHOR_KEY = "widget_author"
         const val WIDGET_LAST_UPDATE_KEY = "widget_last_update"
@@ -213,5 +213,10 @@ class QuoteWidgetProvider : AppWidgetProvider() {
         val quote = sharedPreferences.getString(WIDGET_QUOTE_KEY, "Loading inspiration...")
         val author = sharedPreferences.getString(WIDGET_AUTHOR_KEY, "Quotify")
         return Pair(quote ?: "Loading inspiration...", author ?: "Quotify")
+    }
+
+    fun refreshWidget(context: Context) {
+        val intent = Intent(context, QuoteWidgetProvider::class.java)
+        // ... existing code ...
     }
 } 

@@ -1,4 +1,4 @@
-package com.quotify
+package com.dhruvchheda.quotify
 
 import android.app.Application
 import com.facebook.react.PackageList

@@ -57,12 +57,12 @@ react {
 /**
  * Set this to true to Run Proguard on Release builds to minify the Java bytecode.
  */
-def enableProguardInReleaseBuilds = true
+def enableProguardInReleaseBuilds = false // TEMPORARILY DISABLED
 
 /**
  * Enable separate APKs per architecture for smaller download sizes
  */
-def enableSeparateBuildPerCPUArchitecture = true
+def enableSeparateBuildPerCPUArchitecture = false // TEMPORARILY DISABLED
 
 /**
  * The preferred build flavor of JavaScriptCore (JSC)
@@ -82,19 +82,19 @@ android {
     buildToolsVersion rootProject.ext.buildToolsVersion
     compileSdk rootProject.ext.compileSdkVersion
 
-    namespace "com.quotify"
+    namespace "com.dhruvchheda.quotify"
     defaultConfig {
-        applicationId "com.quotify"
+        applicationId "com.dhruvchheda.quotify"
         minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion
-        versionCode 1
-        versionName "1.0"
+        versionCode 3
+        versionName "1.0.2"
         
         // Enable vector drawable support for smaller APK
-        vectorDrawables.useSupportLibrary = true
+        // vectorDrawables.useSupportLibrary = true // TEMPORARILY DISABLED
         
         // Disable generation of unused resources
-        resConfigs "en"
+        // resConfigs "en" // TEMPORARILY DISABLED
     }
     
     // Enable APK splitting by architecture for smaller downloads
@@ -114,18 +114,24 @@ android {
             keyAlias 'androiddebugkey'
             keyPassword 'android'
         }
+        release {
+            if (project.hasProperty('MYAPP_UPLOAD_STORE_FILE')) {
+                storeFile file(MYAPP_UPLOAD_STORE_FILE)
+                storePassword MYAPP_UPLOAD_STORE_PASSWORD
+                keyAlias MYAPP_UPLOAD_KEY_ALIAS
+                keyPassword MYAPP_UPLOAD_KEY_PASSWORD
+            }
+        }
     }
     buildTypes {
         debug {
             signingConfig signingConfigs.debug
         }
         release {
-            // Caution! In production, you need to generate your own keystore file.
-            // see https://reactnative.dev/docs/signed-apk-android.
-            signingConfig signingConfigs.debug
-            minifyEnabled enableProguardInReleaseBuilds
-            shrinkResources true  // Remove unused resources
-            proguardFiles getDefaultProguardFile("proguard-android-optimize.txt"), "proguard-rules.pro"
+            signingConfig signingConfigs.release
+            minifyEnabled false // TEMPORARILY DISABLED
+            shrinkResources false // TEMPORARILY DISABLED
+            // proguardFiles getDefaultProguardFile("proguard-android-optimize.txt"), "proguard-rules.pro" // TEMPORARILY DISABLED
         }
     }
     

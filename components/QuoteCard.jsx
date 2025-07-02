@@ -11,7 +11,7 @@ import {
   Platform,
 } from 'react-native';
 import Icon from 'react-native-vector-icons/Ionicons';
-import MaterialDesignIcons from 'react-native-vector-icons/MaterialCommunityIcons';
+import MaterialDesignIcons from 'react-native-vector-icons/MaterialIcons';
 import Clipboard from '@react-native-clipboard/clipboard';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
@@ -167,7 +167,7 @@ const QuoteCard = ({ quote, author, onNewQuote, loading, isOffline }) => {
       <View style={styles.card}>
         <View style={styles.cardHeader}>
           <View style={styles.quoteIconContainer}>
-            <MaterialDesignIcons name="format-quote-open" size={32} color="#667eea" style={styles.quoteIcon} />
+            <MaterialDesignIcons name="format-quote" size={32} color="#667eea" style={styles.quoteIcon} />
           </View>
           <TouchableOpacity
             style={[styles.favoriteButton, favoriteLoading && styles.favoriteButtonDisabled]}

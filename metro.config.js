@@ -8,6 +8,8 @@ const { getDefaultConfig, mergeConfig } = require('@react-native/metro-config');
  */
 const config = {
   // Enable minification for smaller bundle size
+  // TEMPORARILY DISABLED FOR DEBUGGING
+  /*
   transformer: {
     minifierPath: require.resolve('metro-minify-terser'),
     minifierConfig: {
@@ -28,6 +30,7 @@ const config = {
     // Enable tree shaking for better dead code elimination
     unstable_enablePackageExports: true,
   },
+  */
 };
 
 module.exports = mergeConfig(getDefaultConfig(__dirname), config);

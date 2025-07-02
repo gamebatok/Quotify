@@ -30,7 +30,7 @@ const fallbackQuotes = [
 ];
 
 class WidgetService {
-  static APP_GROUP_ID = 'group.com.quotify.widgets';
+  static APP_GROUP_ID = 'group.com.dhruvchheda.quotify.widgets';
   static WIDGET_QUOTE_KEY = 'widget_quote';
   static WIDGET_AUTHOR_KEY = 'widget_author';
   static WIDGET_LAST_UPDATE_KEY = 'widget_last_update';

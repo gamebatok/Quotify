@@ -22,7 +22,7 @@
 }
 
 # Quotify specific
--keep class com.quotify.** { *; }
+-keep class com.dhruvchheda.quotify.** { *; }
 
 # AsyncStorage
 -keep class com.reactnativecommunity.asyncstorage.** { *; }
