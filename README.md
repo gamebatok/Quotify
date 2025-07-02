@@ -4,7 +4,7 @@
 
 ### *Daily inspiration at your fingertips*
 
-A beautiful React Native app with 2,127+ inspiring quotes, home screen widgets, and elegant design. Works completely offline with instant quote loading.
+A beautiful React Native app with 2,127+ inspiring quotes, smart category filtering, home screen widgets, and elegant design. Works completely offline with instant quote loading.
 
 [![React Native](https://img.shields.io/badge/React%20Native-0.80.0-blue.svg)](https://reactnative.dev/)
 [![Platform](https://img.shields.io/badge/platform-iOS%20%7C%20Android-lightgrey.svg)](https://github.com/facebook/react-native)
@@ -20,6 +20,7 @@ A beautiful React Native app with 2,127+ inspiring quotes, home screen widgets, 
 
 ### 🎯 **Core Features**
 - **Random Quote Generation** - Instant access to 2,127+ inspiring quotes
+- **Smart Category Filtering** - Find quotes by topic - Motivation, Success, Wisdom, and 20+ more categories
 - **Fully Offline** - No internet connection required, works anywhere
 - **Favorites System** - Save and manage your favorite quotes
 - **Beautiful UI** - Stunning gradient backgrounds and modern design
@@ -33,6 +34,7 @@ A beautiful React Native app with 2,127+ inspiring quotes, home screen widgets, 
 - **Seamless Sync** - Widgets update when you fetch new quotes in the app
 
 ### 🚀 **Smart Features**
+- **Categories & Filters** - Filter quotes by tags like Motivation, Success, Wisdom, and more
 - **Local Quote Database** - 2,127+ curated quotes stored locally for instant access
 - **Lightning Fast** - No loading times or network dependencies
 - **Share Functionality** - Share quotes with friends
@@ -171,11 +173,20 @@ A beautiful React Native app with 2,127+ inspiring quotes, home screen widgets, 
 4. **Use the share button** to spread inspiration with friends
 5. **Access favorites** via the favorites button in the top corner
 
+### Discover Quotes by Category
+1. **Tap the "Filter" button** to open the category selection screen
+2. **Browse popular categories** like Motivation, Success, Wisdom, Inspirational, and more
+3. **Select one or multiple categories** to filter quotes by your interests
+4. **Apply filters** to get quotes that match your current mood or needs
+5. **View category tags** displayed below each quote to see what topics it covers
+6. **Clear filters** anytime to return to seeing all quotes
+
 ### Always Available
 - Quotify works completely offline with 2,127+ curated quotes stored locally
 - No internet connection required - perfect for travel or low connectivity areas
 - Instant quote loading with no network delays
-- All features including favorites work without any internet connection
+- All features including favorites and category filtering work without any internet connection
+- Smart filtering happens locally for lightning-fast category browsing
 
 ---
 

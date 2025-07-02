@@ -16,7 +16,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const { width } = Dimensions.get('window');
 
-const QuoteCard = ({ quote, author, onNewQuote, loading, isOffline }) => {
+const QuoteCard = ({ quote, author, tags = [], onNewQuote, loading, isOffline }) => {
   const [copySuccess, setCopySuccess] = useState(false);
   const [isFavorite, setIsFavorite] = useState(false);
   const [favoriteLoading, setFavoriteLoading] = useState(false);
@@ -193,6 +193,24 @@ const QuoteCard = ({ quote, author, onNewQuote, loading, isOffline }) => {
             </View>
           )}
         </View>
+
+        {/* Tags Display */}
+        {tags && tags.length > 0 && (
+          <View style={styles.tagsContainer}>
+            <View style={styles.tagsScrollView}>
+              {tags.slice(0, 3).map((tag, index) => (
+                <View key={tag} style={styles.tagChip}>
+                  <Text style={styles.tagText}>{tag}</Text>
+                </View>
+              ))}
+              {tags.length > 3 && (
+                <View style={styles.tagChip}>
+                  <Text style={styles.tagText}>+{tags.length - 3}</Text>
+                </View>
+              )}
+            </View>
+          </View>
+        )}
       </View>
       
       <View style={styles.buttonContainer}>
@@ -374,6 +392,29 @@ const styles = StyleSheet.create({
   },
   buttonDisabled: {
     backgroundColor: '#95a5a6',
+  },
+  tagsContainer: {
+    marginTop: 16,
+    alignItems: 'center',
+  },
+  tagsScrollView: {
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+    justifyContent: 'center',
+    gap: 8,
+  },
+  tagChip: {
+    backgroundColor: '#f8f9fa',
+    borderRadius: 16,
+    paddingHorizontal: 12,
+    paddingVertical: 6,
+    borderWidth: 1,
+    borderColor: '#e9ecef',
+  },
+  tagText: {
+    fontSize: 12,
+    color: '#6c757d',
+    fontWeight: '500',
   },
 });
 

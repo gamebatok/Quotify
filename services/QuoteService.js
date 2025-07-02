@@ -16,6 +16,77 @@ class QuoteService {
     };
   }
 
+  static getRandomQuoteByTag(tag) {
+    const filteredQuotes = this.quotes.filter(q => 
+      q.tags && q.tags.some(t => t.toLowerCase() === tag.toLowerCase())
+    );
+    
+    if (filteredQuotes.length === 0) {
+      return null;
+    }
+    
+    const randomIndex = Math.floor(Math.random() * filteredQuotes.length);
+    const selectedQuote = filteredQuotes[randomIndex];
+    
+    return {
+      content: selectedQuote.content,
+      author: selectedQuote.author,
+      tags: selectedQuote.tags || [],
+      id: selectedQuote._id
+    };
+  }
+
+  static getRandomQuoteByTags(tags) {
+    if (!tags || tags.length === 0) {
+      return this.getRandomQuote();
+    }
+    
+    const filteredQuotes = this.quotes.filter(q => 
+      q.tags && tags.some(tag => 
+        q.tags.some(t => t.toLowerCase() === tag.toLowerCase())
+      )
+    );
+    
+    if (filteredQuotes.length === 0) {
+      return null;
+    }
+    
+    const randomIndex = Math.floor(Math.random() * filteredQuotes.length);
+    const selectedQuote = filteredQuotes[randomIndex];
+    
+    return {
+      content: selectedQuote.content,
+      author: selectedQuote.author,
+      tags: selectedQuote.tags || [],
+      id: selectedQuote._id
+    };
+  }
+
+  static getAllTags() {
+    const tagSet = new Set();
+    this.quotes.forEach(quote => {
+      if (quote.tags) {
+        quote.tags.forEach(tag => tagSet.add(tag));
+      }
+    });
+    return Array.from(tagSet).sort();
+  }
+
+  static getTagsWithCount() {
+    const tagCount = {};
+    this.quotes.forEach(quote => {
+      if (quote.tags) {
+        quote.tags.forEach(tag => {
+          tagCount[tag] = (tagCount[tag] || 0) + 1;
+        });
+      }
+    });
+    
+    return Object.entries(tagCount)
+      .map(([tag, count]) => ({ tag, count }))
+      .sort((a, b) => b.count - a.count);
+  }
+
   static getQuoteById(id) {
     const quote = this.quotes.find(q => q._id === id);
     if (quote) {
